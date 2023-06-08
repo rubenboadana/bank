@@ -2,17 +2,36 @@
 
 [![CI pipeline status](https://github.com/rubenboadana/bank/actions/workflows/maven.yml/badge.svg)](https://github.com/rubenboadana/bank/actions)
 ![Coverage](.github/badges/jacoco.svg)
+
 # 🐳 Required tools
 
 1. Docker
 2. Maven 3
 3. JDK 17
+4. (Optional) IntelliJ as preferred IDE for out of the box run configurations
+
+# 🧰 Tech Stack
+
+* **Language**: Java 17
+* **Framework**: Spring Boot 3.0.7
+* **Testing**: JUnit Jupiter, MockMVC, TestContainers, Cucumber
+* **Build tool**: Maven
+* **API Doc**: Swagger
+* **Containers**: Docker, Docker compose
+* **Libraries**: Lombok
+* **Authentication**: JWT
+* **Database**: PostgreSQL
+* **CI**: GitHub Actions
+    * Build
+    * Code coverage report
+    * OWASP Dependencies checker
+* **Architecture**: Hexagonal, Vertical Slicing
 
 # 👩‍💻🧾 How To Start
 
 1. Build the application: `mvn clean install`
 2. Start up Docker compose: `docker-compose up`
-   1. **IntelliJ**: Choose the Run Configuration "Docker compose up" and click the ▶️ icon
+    1. **IntelliJ**: Choose the Run Configuration "Docker compose up" and click the ▶️ icon
 3. Go to browser and check the REST api documentation: http://localhost:8000/swagger-ui/index.html
 
 # 🐛 How To debug
