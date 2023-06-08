@@ -16,7 +16,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=example
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-    #Overwrite the default application Dockerfile entrypoint to start up the process with the non-blocking debug mode at port 5005
+    #Overwrite the default application Dockerfile entrypoint to start up the process with the non-blocking debug mode listening at port 5005
     entrypoint: java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 org.springframework.boot.loader.JarLauncher
 
   db:

@@ -12,14 +12,15 @@
 
 1. Build the application: `mvn clean install`
 2. Start up Docker compose: `docker-compose up`
+   1. **IntelliJ**: Choose the Run Configuration "Docker compose up" and click the ▶️ icon
 3. Go to browser and check the REST api documentation: http://localhost:8000/swagger-ui/index.html
 
 # 🐛 How To debug
 
-## IntelliJ
+### IntelliJ
 
-1. Choose the Run Configuration "Debug Bank application" and click 🐛 icon
-   It will run the docker-compose-debug configuration firstly and attach to the process at port 5005 afterward
+1. Choose the Run Configuration "Debug Bank application" and click the 🐛 icon \
+   It will run the _docker-compose-debug_ configuration firstly and attach to the process at port 5005 afterward
 
 # 🤖🧾 GitHub actions
 
