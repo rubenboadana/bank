@@ -1,4 +1,4 @@
-package com.iobuilders.wallet.domain.dto;
+package com.iobuilders.shared.domain.dto;
 
 import lombok.*;
 

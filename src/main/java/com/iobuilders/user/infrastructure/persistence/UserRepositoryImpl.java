@@ -47,14 +47,24 @@ public class UserRepositoryImpl implements UserRepository {
         UserEntity userEntity = userJPARepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         return getDTOFrom(userEntity);
     }
+
+    @Override
+    public UserDTO findByUserNameAndPassword(String userName, String password) {
+        UserEntity userEntity = userJPARepository.findByUserNameAndPassword(userName, password).orElseThrow(() -> new UserNotFoundException(userName));
+        return getDTOFrom(userEntity);
+    }
+
+
     private UserEntity getEntityFrom(UserDTO user) {
         return UserEntity.builder()
+                .userName(user.getUserName())
+                .password(user.getPassword())
                 .name(user.getName())
                 .surname(user.getSurname())
                 .build();
     }
 
     private UserDTO getDTOFrom(UserEntity userEntity) {
-        return new UserDTO(userEntity.getId(), userEntity.getName(), userEntity.getSurname());
+        return new UserDTO(userEntity.getId(), userEntity.getUserName(), userEntity.getPassword(), userEntity.getName(), userEntity.getSurname());
     }
 }

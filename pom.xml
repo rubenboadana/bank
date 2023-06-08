@@ -19,6 +19,9 @@
 		<cucumber.version>7.3.4</cucumber.version>
 		<jacoco.version>0.8.8</jacoco.version>
 		<postgres.version>42.3.8</postgres.version>
+		<jsonwebtoken.version>0.9.1</jsonwebtoken.version>
+		<jaxb-api.version>2.2.7</jaxb-api.version>
+		<jaxb-impl.version>2.2.5-b10</jaxb-impl.version>
 	</properties>
 
 	<dependencyManagement>
@@ -119,6 +122,21 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>${jsonwebtoken.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>${jaxb-api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+			<version>${jaxb-impl.version}</version>
 		</dependency>
 	</dependencies>
 

@@ -37,7 +37,7 @@ class DeleteWalletControllerTest {
         //When/Then
         mockMvc.perform(delete("/wallets/1"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message", is("Could not find wallet with id 1")));
+                .andExpect(jsonPath("$.message", is("Could not find the requested resource: Wallet with id 1")));
 
     }
 

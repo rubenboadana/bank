@@ -1,8 +1,6 @@
 package com.iobuilders.user.infrastructure.controller;
 
-import com.iobuilders.user.domain.dto.ErrorResponse;
 import com.iobuilders.user.domain.UserService;
-import com.iobuilders.user.domain.exceptions.UserNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,13 +33,7 @@ public class DeleteUserController {
                     content = @Content)})
     @DeleteMapping(value = "/users/{id}")
     public ResponseEntity deleteUser(@PathVariable(value = "id") Long id) {
-        try {
-            userService.delete(id);
-        } catch (UserNotFoundException userNotFoundException) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.builder().message(userNotFoundException.getMessage()).build());
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.builder().message(ex.getMessage()).build());
-        }
+        userService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

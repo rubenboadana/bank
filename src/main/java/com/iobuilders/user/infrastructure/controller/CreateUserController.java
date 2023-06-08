@@ -1,6 +1,5 @@
 package com.iobuilders.user.infrastructure.controller;
 
-import com.iobuilders.user.domain.dto.ErrorResponse;
 import com.iobuilders.user.domain.UserService;
 import com.iobuilders.user.domain.dto.UserDTO;
 import com.iobuilders.user.domain.dto.UserID;
@@ -10,14 +9,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import jakarta.validation.Valid;
 
 @RestController
 @Tag(name = "Users")
@@ -40,12 +38,7 @@ public class CreateUserController {
                     content = @Content)})
     @PostMapping(value = "/users/register")
     public ResponseEntity createUser(@Valid @RequestBody UserDTO user) {
-        UserID id;
-        try {
-            id = userService.create(user);
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.builder().message(ex.getMessage()).build());
-        }
+        UserID id = userService.create(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 

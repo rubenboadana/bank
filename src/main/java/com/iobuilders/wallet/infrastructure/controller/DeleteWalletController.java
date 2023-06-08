@@ -1,8 +1,6 @@
 package com.iobuilders.wallet.infrastructure.controller;
 
 import com.iobuilders.wallet.domain.WalletService;
-import com.iobuilders.wallet.domain.dto.ErrorResponse;
-import com.iobuilders.wallet.domain.exceptions.WalletNotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,13 +33,7 @@ public class DeleteWalletController {
                     content = @Content)})
     @DeleteMapping(value = "/wallets/{id}")
     public ResponseEntity deleteWallet(@PathVariable(value = "id") Long id) {
-        try {
-            walletService.delete(id);
-        } catch (WalletNotFoundException walletNotFoundException) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorResponse.builder().message(walletNotFoundException.getMessage()).build());
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.builder().message(ex.getMessage()).build());
-        }
+        walletService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

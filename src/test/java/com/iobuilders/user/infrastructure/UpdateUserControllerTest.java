@@ -19,9 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = UpdateUserController.class)
 @AutoConfigureMockMvc
@@ -50,7 +48,7 @@ class UpdateUserControllerTest {
         mockMvc.perform(put("/users/1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(product)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message", is("Could not find user with id 1")));
+                .andExpect(jsonPath("$.message", is("Could not find the requested resource: User with id 1")));
 
     }
 

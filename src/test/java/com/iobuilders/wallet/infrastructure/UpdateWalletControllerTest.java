@@ -48,7 +48,7 @@ class UpdateWalletControllerTest {
         mockMvc.perform(put("/wallets/1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(wallet)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message", is("Could not find wallet with id 1")));
+                .andExpect(jsonPath("$.message", is("Could not find the requested resource: Wallet with id 1")));
 
     }
 

@@ -2,11 +2,7 @@ package com.iobuilders.user.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +13,10 @@ public class UserDTO {
 
     @JsonIgnore
     private Long id;
+    @NotNull
+    private String userName;
+    @NotNull
+    private String password;
     @NotNull
     private String name;
     @NotNull

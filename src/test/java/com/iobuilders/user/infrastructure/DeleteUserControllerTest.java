@@ -15,9 +15,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = DeleteUserController.class)
 @AutoConfigureMockMvc
@@ -39,7 +37,7 @@ class DeleteUserControllerTest {
         //When/Then
         mockMvc.perform(delete("/users/1"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message", is("Could not find user with id 1")));
+                .andExpect(jsonPath("$.message", is("Could not find the requested resource: User with id 1")));
 
     }
 

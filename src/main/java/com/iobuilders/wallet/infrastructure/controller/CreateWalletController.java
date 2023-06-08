@@ -1,7 +1,6 @@
 package com.iobuilders.wallet.infrastructure.controller;
 
 import com.iobuilders.wallet.domain.WalletService;
-import com.iobuilders.wallet.domain.dto.ErrorResponse;
 import com.iobuilders.wallet.domain.dto.WalletDTO;
 import com.iobuilders.wallet.domain.dto.WalletID;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,12 +38,7 @@ public class CreateWalletController {
                     content = @Content)})
     @PostMapping(value = "/wallets")
     public ResponseEntity createWallet(@Valid @RequestBody WalletDTO wallet) {
-        WalletID id;
-        try {
-            id = walletService.create(wallet);
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ErrorResponse.builder().message(ex.getMessage()).build());
-        }
+        WalletID id = walletService.create(wallet);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }
 }
