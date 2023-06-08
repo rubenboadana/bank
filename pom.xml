@@ -22,6 +22,7 @@
 		<jsonwebtoken.version>0.9.1</jsonwebtoken.version>
 		<jaxb-api.version>2.2.7</jaxb-api.version>
 		<jaxb-impl.version>2.2.5-b10</jaxb-impl.version>
+		<snakeyaml.version>2.0</snakeyaml.version>
 	</properties>
 
 	<dependencyManagement>
