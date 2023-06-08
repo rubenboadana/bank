@@ -1,4 +1,4 @@
-package com.iobuilders.common.utils;
+package com.iobuilders.shared.utils;
 
 import io.cucumber.spring.ScenarioScope;
 import lombok.Data;

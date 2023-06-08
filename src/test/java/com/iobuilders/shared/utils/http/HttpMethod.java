@@ -1,4 +1,4 @@
-package com.iobuilders.common.utils.http;
+package com.iobuilders.shared.utils.http;
 
 public enum HttpMethod {
     GET(org.springframework.http.HttpMethod.GET.name(), false),

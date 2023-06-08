@@ -1,9 +1,9 @@
-package com.iobuilders.wallet.steps;
+package com.iobuilders.wallet.infrastructure.steps;
 
-import com.iobuilders.common.utils.ScenarioContext;
-import com.iobuilders.common.utils.http.HttpClient;
-import com.iobuilders.common.utils.http.HttpMethod;
-import com.iobuilders.common.utils.http.HttpRequest;
+import com.iobuilders.shared.utils.ScenarioContext;
+import com.iobuilders.shared.utils.http.HttpClient;
+import com.iobuilders.shared.utils.http.HttpMethod;
+import com.iobuilders.shared.utils.http.HttpRequest;
 import com.iobuilders.wallet.domain.WalletObjectMother;
 import com.iobuilders.wallet.domain.dto.WalletDTO;
 import io.cucumber.java.en.Given;

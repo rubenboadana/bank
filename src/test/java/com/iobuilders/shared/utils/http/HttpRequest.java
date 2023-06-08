@@ -1,6 +1,6 @@
-package com.iobuilders.common.utils.http;
+package com.iobuilders.shared.utils.http;
 
-import com.iobuilders.common.utils.http.exception.MissingHttpRequestParametersException;
+import com.iobuilders.shared.utils.http.exception.MissingHttpRequestParametersException;
 
 public final class HttpRequest<T> {
     private final T body;

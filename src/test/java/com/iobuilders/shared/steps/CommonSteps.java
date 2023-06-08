@@ -1,6 +1,6 @@
-package com.iobuilders.common.steps;
+package com.iobuilders.shared.steps;
 
-import com.iobuilders.common.utils.ScenarioContext;
+import com.iobuilders.shared.utils.ScenarioContext;
 import io.cucumber.java.en.Then;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

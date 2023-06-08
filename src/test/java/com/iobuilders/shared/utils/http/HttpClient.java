@@ -1,12 +1,9 @@
-package com.iobuilders.common.utils.http;
+package com.iobuilders.shared.utils.http;
 
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
@@ -40,7 +37,7 @@ public class HttpClient {
         }
     }
 
-    public static <T> HttpRequest<T> createHttpRequest(final com.iobuilders.common.utils.http.HttpMethod httpMethod, final String requestURL, final T requestBody) {
+    public static <T> HttpRequest<T> createHttpRequest(final com.iobuilders.shared.utils.http.HttpMethod httpMethod, final String requestURL, final T requestBody) {
         final HttpRequest.Builder<T> httpRequestBuilder = new HttpRequest.Builder<>(httpMethod, requestURL);
         if (httpMethod.hasMandatoryBody()) {
             return httpRequestBuilder.withBody(requestBody).build();

@@ -1,9 +1,9 @@
-package com.iobuilders.user.steps;
+package com.iobuilders.user.infrastructure.steps;
 
-import com.iobuilders.common.utils.ScenarioContext;
-import com.iobuilders.common.utils.http.HttpClient;
-import com.iobuilders.common.utils.http.HttpMethod;
-import com.iobuilders.common.utils.http.HttpRequest;
+import com.iobuilders.shared.utils.ScenarioContext;
+import com.iobuilders.shared.utils.http.HttpClient;
+import com.iobuilders.shared.utils.http.HttpMethod;
+import com.iobuilders.shared.utils.http.HttpRequest;
 import com.iobuilders.user.domain.LoginRequestObjectMother;
 import com.iobuilders.user.domain.UserObjectMother;
 import com.iobuilders.user.domain.dto.LoginRequest;
