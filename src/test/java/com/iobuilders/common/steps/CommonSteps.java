@@ -24,4 +24,10 @@ public class CommonSteps {
         assertThat(response.getBody()).isEqualTo(expectedBody);
     }
 
+    @Then("^response body is like:$")
+    public void checkSimilarResponseBody(String expectedBody) {
+        ResponseEntity<String> response = context.getResponse();
+        assertThat(response.getBody()).startsWith(expectedBody);
+    }
+
 }

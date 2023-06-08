@@ -4,7 +4,9 @@ import com.iobuilders.common.utils.ScenarioContext;
 import com.iobuilders.common.utils.http.HttpClient;
 import com.iobuilders.common.utils.http.HttpMethod;
 import com.iobuilders.common.utils.http.HttpRequest;
+import com.iobuilders.user.domain.LoginRequestObjectMother;
 import com.iobuilders.user.domain.UserObjectMother;
+import com.iobuilders.user.domain.dto.LoginRequest;
 import com.iobuilders.user.domain.dto.UserDTO;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -37,6 +39,12 @@ public class UserSteps {
         context.setResponse(response);
     }
 
+    @When("^valid user credentials are sent$")
+    public void userLoginIsRequested() {
+        ResponseEntity<String> response = doLoginRequest();
+        context.setResponse(response);
+    }
+
     @When("^(valid|invalid) user delete request is sent$")
     public void userDeleteIsRequested(String requestType) {
         int userID = VALID_USER.equals(requestType) ? DEFAULT_USER_ID : NOT_EXISTING_USER_ID;
@@ -56,6 +64,13 @@ public class UserSteps {
         UserDTO user = UserObjectMother.basic();
 
         final HttpRequest<UserDTO> httpRequest = HttpClient.createHttpRequest(HttpMethod.DELETE, "/users/" + userId, user);
+        return httpClient.doRequest(httpRequest);
+    }
+
+    private ResponseEntity<String> doLoginRequest() {
+        LoginRequest request = LoginRequestObjectMother.basic();
+
+        final HttpRequest<LoginRequest> httpRequest = HttpClient.createHttpRequest(HttpMethod.POST, "/users/login", request);
         return httpClient.doRequest(httpRequest);
     }
 
