@@ -1,5 +1,6 @@
 package com.iobuilders.user.application;
 
+import com.iobuilders.user.domain.JwtGeneratorService;
 import com.iobuilders.user.domain.UserRepository;
 import com.iobuilders.user.domain.UserService;
 import com.iobuilders.user.domain.dto.JwtToken;
@@ -14,12 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
-    private final JwtGenerator jwtGenerator;
+    private final JwtGeneratorService jwtGeneratorService;
 
     @Autowired
-    public UserServiceImpl(UserRepository repository, JwtGenerator jwtGenerator) {
+    public UserServiceImpl(UserRepository repository, JwtGeneratorService jwtGeneratorService) {
         this.repository = repository;
-        this.jwtGenerator = jwtGenerator;
+        this.jwtGeneratorService = jwtGeneratorService;
     }
 
     @Override
@@ -41,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public JwtToken login(LoginRequest loginRequest) {
         UserDTO user = repository.findByUserNameAndPassword(loginRequest.username(), loginRequest.password());
-        return jwtGenerator.generateToken(user);
+        return jwtGeneratorService.generateToken(user);
     }
 
     private void checkIfExists(Long id) {

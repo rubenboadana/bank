@@ -1,5 +1,6 @@
 package com.iobuilders.user.application;
 
+import com.iobuilders.user.domain.JwtGeneratorService;
 import com.iobuilders.user.domain.dto.JwtToken;
 import com.iobuilders.user.domain.dto.UserDTO;
 import io.jsonwebtoken.Jwts;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 @Service
-public class JwtGeneratorImpl implements JwtGenerator {
+public class JwtGeneratorServiceImpl implements JwtGeneratorService {
     @Value("${jwt.secret}")
     private String secret;
 
