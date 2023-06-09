@@ -25,7 +25,9 @@
     * Build
     * Code coverage report
     * OWASP Dependencies checker
-* **Architecture**: Hexagonal, Vertical Slicing
+* **Architecture**: Modulith with Hexagonal architecture on each module \
+  The aim of this logical separation by feature/domain is keep delivering the application as a monolith due its
+  simplicity but let us promote those modules which could require scalability in human/resource terms in an easy way.
 
 # 👩‍💻🧾 How To Start
 
