@@ -8,10 +8,12 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
-public class WalletDTO {
+public class Wallet {
 
     @JsonIgnore
     private Long id;
+
+    private WalletOwner owner;
 
     private Quantity quantity;
 

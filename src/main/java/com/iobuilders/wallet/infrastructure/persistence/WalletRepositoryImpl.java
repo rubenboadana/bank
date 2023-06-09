@@ -1,9 +1,10 @@
 package com.iobuilders.wallet.infrastructure.persistence;
 
 import com.iobuilders.wallet.domain.WalletRepository;
-import com.iobuilders.wallet.domain.dto.WalletDTO;
 import com.iobuilders.wallet.domain.dto.Quantity;
+import com.iobuilders.wallet.domain.dto.Wallet;
 import com.iobuilders.wallet.domain.dto.WalletID;
+import com.iobuilders.wallet.domain.dto.WalletOwner;
 import com.iobuilders.wallet.domain.exceptions.WalletNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,7 +20,7 @@ public class WalletRepositoryImpl implements WalletRepository {
     }
 
     @Override
-    public WalletID create(WalletDTO wallet) {
+    public WalletID create(Wallet wallet) {
         WalletEntity entity = getEntityFrom(wallet);
         WalletEntity response = walletJPARepository.save(entity);
 
@@ -32,7 +33,7 @@ public class WalletRepositoryImpl implements WalletRepository {
     }
 
     @Override
-    public WalletDTO update(Long id, WalletDTO wallet) {
+    public Wallet update(Long id, Wallet wallet) {
         WalletEntity oldEntity = walletJPARepository.findById(id).orElseThrow(() -> new WalletNotFoundException(id));
         oldEntity.setQuantity(wallet.getQuantity());
 
@@ -42,17 +43,21 @@ public class WalletRepositoryImpl implements WalletRepository {
     }
 
     @Override
-    public WalletDTO findById(Long id) {
+    public Wallet findById(Long id) {
         WalletEntity walletEntity = walletJPARepository.findById(id).orElseThrow(() -> new WalletNotFoundException(id));
         return getDTOFrom(walletEntity);
     }
-    private WalletEntity getEntityFrom(WalletDTO wallet) {
+
+    private WalletEntity getEntityFrom(Wallet wallet) {
         return WalletEntity.builder()
                 .quantity(wallet.getQuantity())
                 .build();
     }
 
-    private WalletDTO getDTOFrom(WalletEntity walletEntity) {
-        return new WalletDTO(walletEntity.getId(), new Quantity(walletEntity.getQuantity()));
+    private Wallet getDTOFrom(WalletEntity walletEntity) {
+        return Wallet.builder()
+                .owner(new WalletOwner(walletEntity.getOwner().getId(), walletEntity.getOwner().getUserName()))
+                .quantity(new Quantity(walletEntity.getQuantity()))
+                .build();
     }
 }

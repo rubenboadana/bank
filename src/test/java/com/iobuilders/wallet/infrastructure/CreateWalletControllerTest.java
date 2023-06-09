@@ -3,7 +3,7 @@ package com.iobuilders.wallet.infrastructure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iobuilders.wallet.domain.WalletObjectMother;
 import com.iobuilders.wallet.domain.WalletService;
-import com.iobuilders.wallet.domain.dto.WalletDTO;
+import com.iobuilders.wallet.domain.dto.Wallet;
 import com.iobuilders.wallet.domain.dto.WalletID;
 import com.iobuilders.wallet.infrastructure.controller.CreateWalletController;
 import org.junit.jupiter.api.Test;
@@ -40,10 +40,10 @@ class CreateWalletControllerTest {
     @Test
     void should_responseInternalError_when_internalErrorIsProduced() throws Exception {
         //Given
-        doThrow(new RuntimeException()).when(walletServiceMock).create(any(WalletDTO.class));
+        doThrow(new RuntimeException()).when(walletServiceMock).create(any(Wallet.class));
 
         //When/Then
-        WalletDTO wallet = WalletObjectMother.basic();
+        Wallet wallet = WalletObjectMother.basic();
         mockMvc.perform(post("/wallets").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(wallet)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
@@ -52,10 +52,10 @@ class CreateWalletControllerTest {
     @Test
     void should_returnHTTP200_when_orderCreationSucceed() throws Exception {
         //Given
-        doReturn(new WalletID(NEW_WALLET_ID)).when(walletServiceMock).create(any(WalletDTO.class));
+        doReturn(new WalletID(NEW_WALLET_ID)).when(walletServiceMock).create(any(Wallet.class));
 
         //When/Then
-        WalletDTO wallet = WalletObjectMother.basic();
+        Wallet wallet = WalletObjectMother.basic();
         mockMvc.perform(post("/wallets").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(wallet)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

@@ -5,7 +5,7 @@ import com.iobuilders.shared.utils.http.HttpClient;
 import com.iobuilders.shared.utils.http.HttpMethod;
 import com.iobuilders.shared.utils.http.HttpRequest;
 import com.iobuilders.wallet.domain.WalletObjectMother;
-import com.iobuilders.wallet.domain.dto.WalletDTO;
+import com.iobuilders.wallet.domain.dto.Wallet;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,17 +45,17 @@ public class WalletSteps {
     }
 
     private ResponseEntity<String> doCreateRequest() {
-        WalletDTO wallet = WalletObjectMother.basic();
+        Wallet wallet = WalletObjectMother.basic();
 
-        final HttpRequest<WalletDTO> httpRequest = HttpClient.createHttpRequest(HttpMethod.POST, "/wallets", wallet);
+        final HttpRequest<Wallet> httpRequest = HttpClient.createHttpRequest(HttpMethod.POST, "/wallets", wallet);
         return httpClient.doRequest(httpRequest);
 
     }
 
     private ResponseEntity<String> doDeleteRequest(int walletId) {
-        WalletDTO wallet = WalletObjectMother.basic();
+        Wallet wallet = WalletObjectMother.basic();
 
-        final HttpRequest<WalletDTO> httpRequest = HttpClient.createHttpRequest(HttpMethod.DELETE, "/wallets/" + walletId, wallet);
+        final HttpRequest<Wallet> httpRequest = HttpClient.createHttpRequest(HttpMethod.DELETE, "/wallets/" + walletId, wallet);
         return httpClient.doRequest(httpRequest);
     }
 

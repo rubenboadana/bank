@@ -7,7 +7,7 @@ import com.iobuilders.shared.utils.http.HttpRequest;
 import com.iobuilders.user.domain.LoginRequestObjectMother;
 import com.iobuilders.user.domain.UserObjectMother;
 import com.iobuilders.user.domain.dto.LoginRequest;
-import com.iobuilders.user.domain.dto.UserDTO;
+import com.iobuilders.user.domain.dto.User;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,17 +53,17 @@ public class UserSteps {
     }
 
     private ResponseEntity<String> doCreateRequest() {
-        UserDTO user = UserObjectMother.basic();
+        User user = UserObjectMother.basic();
 
-        final HttpRequest<UserDTO> httpRequest = HttpClient.createHttpRequest(HttpMethod.POST, "/users/register", user);
+        final HttpRequest<User> httpRequest = HttpClient.createHttpRequest(HttpMethod.POST, "/users/register", user);
         return httpClient.doRequest(httpRequest);
 
     }
 
     private ResponseEntity<String> doDeleteRequest(int userId) {
-        UserDTO user = UserObjectMother.basic();
+        User user = UserObjectMother.basic();
 
-        final HttpRequest<UserDTO> httpRequest = HttpClient.createHttpRequest(HttpMethod.DELETE, "/users/" + userId, user);
+        final HttpRequest<User> httpRequest = HttpClient.createHttpRequest(HttpMethod.DELETE, "/users/" + userId, user);
         return httpClient.doRequest(httpRequest);
     }
 

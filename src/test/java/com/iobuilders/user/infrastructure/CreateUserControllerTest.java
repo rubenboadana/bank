@@ -3,7 +3,7 @@ package com.iobuilders.user.infrastructure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iobuilders.user.domain.UserObjectMother;
 import com.iobuilders.user.domain.UserService;
-import com.iobuilders.user.domain.dto.UserDTO;
+import com.iobuilders.user.domain.dto.User;
 import com.iobuilders.user.domain.dto.UserID;
 import com.iobuilders.user.infrastructure.controller.CreateUserController;
 import org.junit.jupiter.api.Test;
@@ -19,9 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = CreateUserController.class)
 @AutoConfigureMockMvc
@@ -41,10 +39,10 @@ class CreateUserControllerTest {
     @Test
     void should_responseInternalError_when_internalErrorIsProduced() throws Exception {
         //Given
-        doThrow(new RuntimeException()).when(userServiceMock).create(any(UserDTO.class));
+        doThrow(new RuntimeException()).when(userServiceMock).create(any(User.class));
 
         //When/Then
-        UserDTO user = UserObjectMother.basic();
+        User user = UserObjectMother.basic();
         mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
@@ -53,10 +51,10 @@ class CreateUserControllerTest {
     @Test
     void should_returnHTTP200_when_orderCreationSucceed() throws Exception {
         //Given
-        doReturn(new UserID(NEW_USER_ID)).when(userServiceMock).create(any(UserDTO.class));
+        doReturn(new UserID(NEW_USER_ID)).when(userServiceMock).create(any(User.class));
 
         //When/Then
-        UserDTO user = UserObjectMother.basic();
+        User user = UserObjectMother.basic();
         mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))

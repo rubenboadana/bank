@@ -3,8 +3,7 @@ package com.iobuilders.wallet.application;
 import com.iobuilders.user.domain.exceptions.UserNotFoundException;
 import com.iobuilders.wallet.domain.WalletObjectMother;
 import com.iobuilders.wallet.domain.WalletRepository;
-import com.iobuilders.wallet.domain.dto.Quantity;
-import com.iobuilders.wallet.domain.dto.WalletDTO;
+import com.iobuilders.wallet.domain.dto.Wallet;
 import com.iobuilders.wallet.domain.dto.WalletID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,7 +28,7 @@ final class WalletServiceTest {
     @Test
     void should_returnWalletId_when_createSucceed() {
         //Given
-        WalletDTO wallet = WalletObjectMother.basic();
+        Wallet wallet = WalletObjectMother.basic();
         WalletID expectedId = new WalletID(WALLET_ID);
         doReturn(expectedId).when(walletRepositoryMock).create(wallet);
 
@@ -64,13 +63,12 @@ final class WalletServiceTest {
     @Test
     void should_returnUpdatedWallet_when_updateSucceed() {
         //Given
-        WalletDTO wallet = WalletObjectMother.basic();
-        WalletDTO expectedWallet = WalletObjectMother.basic();
-        expectedWallet.setQuantity(new Quantity(NEW_WALLET_QUANTITY));
+        Wallet wallet = WalletObjectMother.basic();
+        Wallet expectedWallet = WalletObjectMother.withQuantity(NEW_WALLET_QUANTITY);
         doReturn(expectedWallet).when(walletRepositoryMock).update(WALLET_ID, wallet);
 
         //When
-        WalletDTO receivedWallet = sut.update(WALLET_ID, wallet);
+        Wallet receivedWallet = sut.update(WALLET_ID, wallet);
 
         //Then
         assertThat(expectedWallet.getQuantity()).isEqualTo(NEW_WALLET_QUANTITY);

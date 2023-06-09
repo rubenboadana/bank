@@ -1,7 +1,7 @@
 package com.iobuilders.user.infrastructure.controller;
 
 import com.iobuilders.user.domain.UserService;
-import com.iobuilders.user.domain.dto.UserDTO;
+import com.iobuilders.user.domain.dto.User;
 import com.iobuilders.user.domain.dto.UserID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,8 +40,8 @@ public class UpdateUserController {
             @ApiResponse(responseCode = "500", description = "User update failure",
                     content = @Content)})
     @PutMapping(value = "/users/{id}")
-    public ResponseEntity updateUser(@PathVariable(value = "id") Long id, @Valid @RequestBody UserDTO user) {
-        UserDTO updatedUser = userService.update(id, user);
+    public ResponseEntity updateUser(@PathVariable(value = "id") Long id, @Valid @RequestBody User user) {
+        User updatedUser = userService.update(id, user);
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
 }

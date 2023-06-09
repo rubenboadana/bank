@@ -1,8 +1,8 @@
 package com.iobuilders.wallet.application;
 
-import com.iobuilders.wallet.domain.WalletService;
 import com.iobuilders.wallet.domain.WalletRepository;
-import com.iobuilders.wallet.domain.dto.WalletDTO;
+import com.iobuilders.wallet.domain.WalletService;
+import com.iobuilders.wallet.domain.dto.Wallet;
 import com.iobuilders.wallet.domain.dto.WalletID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public WalletID create(WalletDTO wallet) {
+    public WalletID create(Wallet wallet) {
         return repository.create(wallet);
     }
 
@@ -30,7 +30,7 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public WalletDTO update(Long id, WalletDTO wallet) {
+    public Wallet update(Long id, Wallet wallet) {
         return repository.update(id, wallet);
     }
 

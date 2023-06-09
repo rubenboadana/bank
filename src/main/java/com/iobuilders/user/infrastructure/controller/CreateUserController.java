@@ -1,7 +1,7 @@
 package com.iobuilders.user.infrastructure.controller;
 
 import com.iobuilders.user.domain.UserService;
-import com.iobuilders.user.domain.dto.UserDTO;
+import com.iobuilders.user.domain.dto.User;
 import com.iobuilders.user.domain.dto.UserID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -37,7 +37,7 @@ public class CreateUserController {
             @ApiResponse(responseCode = "500", description = "User creation failure",
                     content = @Content)})
     @PostMapping(value = "/users/register")
-    public ResponseEntity createUser(@Valid @RequestBody UserDTO user) {
+    public ResponseEntity createUser(@Valid @RequestBody User user) {
         UserID id = userService.create(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(id);
     }

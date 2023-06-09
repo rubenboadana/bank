@@ -1,7 +1,7 @@
 package com.iobuilders.wallet.infrastructure.controller;
 
 import com.iobuilders.wallet.domain.WalletService;
-import com.iobuilders.wallet.domain.dto.WalletDTO;
+import com.iobuilders.wallet.domain.dto.Wallet;
 import com.iobuilders.wallet.domain.dto.WalletID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,8 +40,8 @@ public class UpdateWalletController {
             @ApiResponse(responseCode = "500", description = "Wallet update failure",
                     content = @Content)})
     @PutMapping(value = "/wallets/{id}")
-    public ResponseEntity updateWallet(@PathVariable(value = "id") Long id, @Valid @RequestBody WalletDTO wallet) {
-        WalletDTO updatedWallet = walletService.update(id, wallet);
+    public ResponseEntity updateWallet(@PathVariable(value = "id") Long id, @Valid @RequestBody Wallet wallet) {
+        Wallet updatedWallet = walletService.update(id, wallet);
         return ResponseEntity.status(HttpStatus.OK).body(updatedWallet);
     }
 }

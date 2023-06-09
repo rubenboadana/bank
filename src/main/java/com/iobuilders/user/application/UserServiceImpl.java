@@ -5,7 +5,7 @@ import com.iobuilders.user.domain.UserRepository;
 import com.iobuilders.user.domain.UserService;
 import com.iobuilders.user.domain.dto.JwtToken;
 import com.iobuilders.user.domain.dto.LoginRequest;
-import com.iobuilders.user.domain.dto.UserDTO;
+import com.iobuilders.user.domain.dto.User;
 import com.iobuilders.user.domain.dto.UserID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserID create(UserDTO user) {
+    public UserID create(User user) {
         return repository.create(user);
     }
 
@@ -35,13 +35,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO update(Long id, UserDTO user) {
+    public User update(Long id, User user) {
         return repository.update(id, user);
     }
 
     @Override
     public JwtToken login(LoginRequest loginRequest) {
-        UserDTO user = repository.findByUserNameAndPassword(loginRequest.username(), loginRequest.password());
+        User user = repository.findByUserNameAndPassword(loginRequest.username(), loginRequest.password());
         return jwtGeneratorService.generateToken(user);
     }
 

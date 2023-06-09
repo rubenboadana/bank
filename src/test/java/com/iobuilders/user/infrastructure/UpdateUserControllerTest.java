@@ -3,7 +3,7 @@ package com.iobuilders.user.infrastructure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iobuilders.user.domain.UserObjectMother;
 import com.iobuilders.user.domain.UserService;
-import com.iobuilders.user.domain.dto.UserDTO;
+import com.iobuilders.user.domain.dto.User;
 import com.iobuilders.user.domain.exceptions.UserNotFoundException;
 import com.iobuilders.user.infrastructure.controller.UpdateUserController;
 import org.junit.jupiter.api.Test;
@@ -41,10 +41,10 @@ class UpdateUserControllerTest {
     @Test
     void should_responseUserNotFound_when_invalidUserIdProvided() throws Exception {
         //Given
-        doThrow(new UserNotFoundException(PRODUCT_ID)).when(userServiceMock).update(any(), any(UserDTO.class));
+        doThrow(new UserNotFoundException(PRODUCT_ID)).when(userServiceMock).update(any(), any(User.class));
 
         //When/Then
-        UserDTO product = UserObjectMother.basic();
+        User product = UserObjectMother.basic();
         mockMvc.perform(put("/users/1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(product)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -56,10 +56,10 @@ class UpdateUserControllerTest {
     @Test
     void should_responseInternalError_when_internalErrorIsProduced() throws Exception {
         //Given
-        doThrow(new RuntimeException()).when(userServiceMock).update(any(), any(UserDTO.class));
+        doThrow(new RuntimeException()).when(userServiceMock).update(any(), any(User.class));
 
         //When/Then
-        UserDTO product = UserObjectMother.basic();
+        User product = UserObjectMother.basic();
         mockMvc.perform(put("/users/1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(product)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
@@ -69,12 +69,11 @@ class UpdateUserControllerTest {
     @Test
     void should_returnHTTP200_when_updateProductSucceed() throws Exception {
         //Given
-        UserDTO expectedProduct = UserObjectMother.basic();
-        expectedProduct.setName(NEW_USER_NAME);
-        doReturn(expectedProduct).when(userServiceMock).update(any(), any(UserDTO.class));
+        User expectedProduct = UserObjectMother.withName(NEW_USER_NAME);
+        doReturn(expectedProduct).when(userServiceMock).update(any(), any(User.class));
 
         //When/Then
-        UserDTO product = UserObjectMother.basic();
+        User product = UserObjectMother.basic();
         mockMvc.perform(put("/users/1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(product)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));

@@ -1,19 +1,19 @@
 package com.iobuilders.user.domain;
 
-import com.iobuilders.user.domain.dto.UserDTO;
+import com.iobuilders.user.domain.dto.User;
 import com.iobuilders.user.domain.dto.UserID;
 
 public interface UserRepository {
 
-    UserID create(UserDTO user);
+    UserID create(User user);
 
     void delete(Long id);
 
-    UserDTO update(Long id, UserDTO user);
+    User update(Long id, User user);
 
-    UserDTO findById(Long id);
+    User findById(Long id);
 
-    UserDTO findByUserNameAndPassword(String userName, String password);
+    User findByUserNameAndPassword(String userName, String password);
 
 
 }

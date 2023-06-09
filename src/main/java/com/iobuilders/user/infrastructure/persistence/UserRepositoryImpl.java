@@ -1,7 +1,7 @@
 package com.iobuilders.user.infrastructure.persistence;
 
 import com.iobuilders.user.domain.UserRepository;
-import com.iobuilders.user.domain.dto.UserDTO;
+import com.iobuilders.user.domain.dto.User;
 import com.iobuilders.user.domain.dto.UserID;
 import com.iobuilders.user.domain.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserID create(UserDTO user) {
+    public UserID create(User user) {
         UserEntity entity = getEntityFrom(user);
         UserEntity response = userJPARepository.save(entity);
 
@@ -32,10 +32,10 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserDTO update(Long id, UserDTO user) {
+    public User update(Long id, User user) {
         UserEntity oldEntity = userJPARepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        oldEntity.setName(user.getName());
-        oldEntity.setSurname(user.getSurname());
+        oldEntity.setName(user.name());
+        oldEntity.setSurname(user.surname());
 
         UserEntity newEntity = userJPARepository.save(oldEntity);
 
@@ -43,28 +43,28 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserDTO findById(Long id) {
+    public User findById(Long id) {
         UserEntity userEntity = userJPARepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         return getDTOFrom(userEntity);
     }
 
     @Override
-    public UserDTO findByUserNameAndPassword(String userName, String password) {
+    public User findByUserNameAndPassword(String userName, String password) {
         UserEntity userEntity = userJPARepository.findByUserNameAndPassword(userName, password).orElseThrow(() -> new UserNotFoundException(userName));
         return getDTOFrom(userEntity);
     }
 
 
-    private UserEntity getEntityFrom(UserDTO user) {
+    private UserEntity getEntityFrom(User user) {
         return UserEntity.builder()
-                .userName(user.getUserName())
-                .password(user.getPassword())
-                .name(user.getName())
-                .surname(user.getSurname())
+                .userName(user.userName())
+                .password(user.password())
+                .name(user.name())
+                .surname(user.surname())
                 .build();
     }
 
-    private UserDTO getDTOFrom(UserEntity userEntity) {
-        return new UserDTO(userEntity.getId(), userEntity.getUserName(), userEntity.getPassword(), userEntity.getName(), userEntity.getSurname());
+    private User getDTOFrom(UserEntity userEntity) {
+        return new User(userEntity.getId(), userEntity.getUserName(), userEntity.getPassword(), userEntity.getName(), userEntity.getSurname());
     }
 }

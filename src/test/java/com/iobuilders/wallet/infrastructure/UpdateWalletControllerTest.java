@@ -3,8 +3,7 @@ package com.iobuilders.wallet.infrastructure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iobuilders.wallet.domain.WalletObjectMother;
 import com.iobuilders.wallet.domain.WalletService;
-import com.iobuilders.wallet.domain.dto.Quantity;
-import com.iobuilders.wallet.domain.dto.WalletDTO;
+import com.iobuilders.wallet.domain.dto.Wallet;
 import com.iobuilders.wallet.domain.exceptions.WalletNotFoundException;
 import com.iobuilders.wallet.infrastructure.controller.UpdateWalletController;
 import org.junit.jupiter.api.Test;
@@ -41,10 +40,10 @@ class UpdateWalletControllerTest {
     @Test
     void should_responseWalletNotFound_when_invalidWalletIdProvided() throws Exception {
         //Given
-        doThrow(new WalletNotFoundException(WALLET_ID)).when(walletServiceMock).update(any(), any(WalletDTO.class));
+        doThrow(new WalletNotFoundException(WALLET_ID)).when(walletServiceMock).update(any(), any(Wallet.class));
 
         //When/Then
-        WalletDTO wallet = WalletObjectMother.basic();
+        Wallet wallet = WalletObjectMother.basic();
         mockMvc.perform(put("/wallets/1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(wallet)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -56,10 +55,10 @@ class UpdateWalletControllerTest {
     @Test
     void should_responseInternalError_when_internalErrorIsProduced() throws Exception {
         //Given
-        doThrow(new RuntimeException()).when(walletServiceMock).update(any(), any(WalletDTO.class));
+        doThrow(new RuntimeException()).when(walletServiceMock).update(any(), any(Wallet.class));
 
         //When/Then
-        WalletDTO wallet = WalletObjectMother.basic();
+        Wallet wallet = WalletObjectMother.basic();
         mockMvc.perform(put("/wallets/1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(wallet)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
@@ -67,15 +66,13 @@ class UpdateWalletControllerTest {
 
 
     @Test
-    void should_returnHTTP200_when_updateProductSucceed() throws Exception {
+    void should_returnHTTP200_when_updateWalletSucceed() throws Exception {
         //Given
-        WalletDTO expectedWallet = WalletObjectMother.basic();
-        expectedWallet.setQuantity(new Quantity(NEW_WALLET_QUANTITY));
-        doReturn(expectedWallet).when(walletServiceMock).update(any(), any(WalletDTO.class));
+        Wallet expectedWallet = WalletObjectMother.withQuantity(NEW_WALLET_QUANTITY);
+        doReturn(expectedWallet).when(walletServiceMock).update(any(), any(Wallet.class));
 
         //When/Then
-        WalletDTO wallet = WalletObjectMother.basic();
-        mockMvc.perform(put("/wallets/1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(wallet)))
+        mockMvc.perform(put("/wallets/1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(expectedWallet)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.quantity", is(NEW_WALLET_QUANTITY)));
