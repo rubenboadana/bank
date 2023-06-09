@@ -3,9 +3,28 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="bank-utils" />
+        <module name="wallet-spring-boot-starter" />
+        <module name="user-spring-boot-starter" />
+        <module name="e2e-steps" />
+        <module name="bank-application" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="common-spring-boot-starter" target="17" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="bank-application" options="-parameters" />
+      <module name="bank-utils" options="-parameters" />
+      <module name="e2e-steps" options="-parameters" />
+      <module name="user-spring-boot-starter" options="-parameters" />
+      <module name="wallet-spring-boot-starter" options="-parameters" />
+    </option>
   </component>
 </project>

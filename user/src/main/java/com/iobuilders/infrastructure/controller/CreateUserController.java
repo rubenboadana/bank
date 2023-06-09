@@ -1,6 +1,7 @@
 package com.iobuilders.infrastructure.controller;
 
-import com.iobuilders.domain.UserService;
+import com.iobuilders.application.handler.CreateUserCommand;
+import com.iobuilders.domain.bus.command.CommandBus;
 import com.iobuilders.domain.dto.User;
 import com.iobuilders.domain.dto.UserID;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,20 +12,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.Future;
+
 @RestController
 @Tag(name = "Users")
 public class CreateUserController {
-    private final UserService userService;
+    private final CommandBus commandBus;
 
     @Autowired
-    public CreateUserController(UserService userService) {
-        this.userService = userService;
+    public CreateUserController(CommandBus commandBus) {
+        this.commandBus = commandBus;
     }
 
     @Operation(summary = "Create a new user")
@@ -37,9 +38,9 @@ public class CreateUserController {
             @ApiResponse(responseCode = "500", description = "User creation failure",
                     content = @Content)})
     @PostMapping(value = "/users/register")
-    public ResponseEntity createUser(@Valid @RequestBody User user) {
-        UserID id = userService.create(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(id);
+    public Future<Void> createUser(@Valid @RequestBody User user) {
+        commandBus.send(new CreateUserCommand(user.userName(), user.password(), user.name(), user.surname()));
+        return null;
     }
 
 }

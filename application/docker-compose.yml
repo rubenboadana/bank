@@ -1,4 +1,4 @@
-version: '2'
+version: '3.3'
 
 services:
   app:
@@ -10,11 +10,14 @@ services:
       - "8000:8080"
     depends_on:
       - db
+      - axonserver
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/bank
       - SPRING_DATASOURCE_USERNAME=example
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    networks:
+      - axon-demo
 
   db:
     image: 'postgres:13.1-alpine'
@@ -23,3 +26,19 @@ services:
       - POSTGRES_USER=example
       - POSTGRES_PASSWORD=1234
       - POSTGRES_DB=bank
+    networks:
+      - axon-demo
+
+  axonserver:
+    image: axoniq/axonserver
+    hostname: axonserver
+    ports:
+      - '8024:8024'
+      - '8124:8124'
+      - '8224:8224'
+    networks:
+      - axon-demo
+
+
+networks:
+  axon-demo:
