@@ -19,6 +19,7 @@ import java.util.Date;
 
 @Service
 public class JwtServiceImpl implements JwtService {
+    public static final long JWT_MAX_DURATION_IN_MINUTES = 60l;
     @Value("${jwt.secret}")
     private String secret;
 
@@ -28,7 +29,7 @@ public class JwtServiceImpl implements JwtService {
         String jwtToken = Jwts.builder().claim("username", user.userName())
                 .setSubject(user.userName())
                 .setIssuedAt(new Date())
-                .setExpiration(Date.from(now.plus(60l, ChronoUnit.MINUTES)))
+                .setExpiration(Date.from(now.plus(JWT_MAX_DURATION_IN_MINUTES, ChronoUnit.MINUTES)))
                 .signWith(SignatureAlgorithm.HS256, key())
                 .compact();
 
