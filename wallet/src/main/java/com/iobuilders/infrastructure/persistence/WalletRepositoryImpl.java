@@ -4,9 +4,12 @@ import com.iobuilders.domain.WalletRepository;
 import com.iobuilders.domain.dto.Quantity;
 import com.iobuilders.domain.dto.Wallet;
 import com.iobuilders.domain.dto.WalletOwner;
-import com.iobuilders.domain.exceptions.WalletNotFoundException;
+import com.iobuilders.domain.dto.WalletTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class WalletRepositoryImpl implements WalletRepository {
@@ -15,7 +18,7 @@ public class WalletRepositoryImpl implements WalletRepository {
 
     @Autowired
     public WalletRepositoryImpl(WalletJPARepository walletJPARepository){
-        this.walletJPARepository =  walletJPARepository;
+        this.walletJPARepository = walletJPARepository;
     }
 
     @Override
@@ -25,13 +28,33 @@ public class WalletRepositoryImpl implements WalletRepository {
     }
 
     @Override
-    public synchronized Wallet deposit(String id, Quantity quantity) {
-        WalletEntity oldEntity = walletJPARepository.findById(id).orElseThrow(() -> new WalletNotFoundException(id));
-        oldEntity.setQuantity(oldEntity.getQuantity() + quantity.getValue());
+    public synchronized void deposit(WalletTransaction transaction) {
+        WalletEntity oldEntity = walletJPARepository.findById(transaction.getDestinyWalletId()).get();
+        oldEntity.setQuantity(oldEntity.getQuantity() + transaction.getQuantity());
 
-        WalletEntity newEntity = walletJPARepository.save(oldEntity);
+        walletJPARepository.save(oldEntity);
+    }
 
-        return getDTOFrom(newEntity);
+    @Override
+    public Optional<Wallet> findByWalletId(String walletId) {
+        Optional<WalletEntity> entity = walletJPARepository.findById(walletId);
+        if (entity.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(getDTOFrom(entity.get()));
+    }
+
+    @Override
+    public void transfer(WalletTransaction transaction) {
+        WalletEntity originWallet = walletJPARepository.findById(transaction.getOriginWalletId()).get();
+        WalletEntity destinyWallet = walletJPARepository.findById(transaction.getDestinyWalletId()).get();
+
+        double transferredAmount = transaction.getQuantity();
+        originWallet.setQuantity(originWallet.getQuantity() - transferredAmount);
+        destinyWallet.setQuantity(destinyWallet.getQuantity() + transferredAmount);
+
+        walletJPARepository.saveAll(List.of(originWallet, destinyWallet));
     }
 
     private WalletEntity getEntityFrom(Wallet wallet) {

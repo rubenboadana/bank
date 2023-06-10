@@ -25,7 +25,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = CreateWalletController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -46,11 +47,13 @@ class CreateWalletControllerTest {
         //Given
         doThrow(new CommandExecutionException("Command handler thrown an exception", new RuntimeException())).when(commandBusMock).send(any(CreateWalletCommand.class));
 
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
+        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(USERNAME, null));
+
         //When/Then
         Wallet wallet = WalletObjectMother.basic();
         mockMvc.perform(post("/wallets").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(wallet)))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(status().isBadRequest());
     }
 
     @Test

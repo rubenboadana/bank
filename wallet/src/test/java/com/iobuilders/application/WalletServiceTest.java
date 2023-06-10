@@ -2,17 +2,20 @@ package com.iobuilders.application;
 
 import com.iobuilders.domain.WalletObjectMother;
 import com.iobuilders.domain.WalletRepository;
+import com.iobuilders.domain.WalletTransactionObjectMother;
+import com.iobuilders.domain.WalletTransactionRepository;
 import com.iobuilders.domain.bus.event.EventBus;
 import com.iobuilders.domain.bus.event.WalletCreatedEvent;
-import com.iobuilders.domain.dto.Quantity;
 import com.iobuilders.domain.dto.Wallet;
+import com.iobuilders.domain.dto.WalletTransaction;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import java.util.Optional;
+
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,6 +25,9 @@ final class WalletServiceTest {
     private static final int NEW_WALLET_QUANTITY = 120;
     @Mock
     private WalletRepository walletRepositoryMock;
+
+    @Mock
+    private WalletTransactionRepository walletTransactionRepository;
     @Mock
     private EventBus eventBus;
 
@@ -29,7 +35,7 @@ final class WalletServiceTest {
     private WalletServiceImpl sut;
 
     @Test
-    void should_succeed_when_createNotHaveExceptions() throws InterruptedException {
+    void should_succeed_when_createHaveNoExceptions() throws InterruptedException {
         //Given
         Wallet wallet = WalletObjectMother.basic();
         WalletCreatedEvent event = new WalletCreatedEvent(wallet.getOwnerUsername(), wallet.getId());
@@ -45,15 +51,15 @@ final class WalletServiceTest {
     @Test
     void should_returnUpdatedWallet_when_updateSucceed() {
         //Given
-        Wallet wallet = WalletObjectMother.basic();
-        Wallet expectedWallet = WalletObjectMother.withQuantity(NEW_WALLET_QUANTITY);
-        doReturn(expectedWallet).when(walletRepositoryMock).deposit(WALLET_ID, new Quantity(wallet.getQuantity()));
+        WalletTransaction transaction = WalletTransactionObjectMother.deposit();
+        doReturn(Optional.of(WalletObjectMother.basic())).when(walletRepositoryMock).findByWalletId(transaction.getDestinyWalletId());
 
         //When
-        Wallet receivedWallet = sut.deposit(WALLET_ID, new Quantity(wallet.getQuantity()));
+        sut.deposit(transaction);
 
         //Then
-        assertThat(receivedWallet.getQuantity()).isEqualTo(NEW_WALLET_QUANTITY);
+        verify(walletRepositoryMock, times(1)).deposit(transaction);
+        verify(walletTransactionRepository, times(1)).add(transaction);
     }
 
 }
