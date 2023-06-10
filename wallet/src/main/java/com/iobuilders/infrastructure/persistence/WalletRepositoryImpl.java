@@ -28,11 +28,6 @@ public class WalletRepositoryImpl implements WalletRepository {
     }
 
     @Override
-    public void delete(Long id) {
-        walletJPARepository.deleteById(id);
-    }
-
-    @Override
     public Wallet update(Long id, Wallet wallet) {
         WalletEntity oldEntity = walletJPARepository.findById(id).orElseThrow(() -> new WalletNotFoundException(id));
         oldEntity.setQuantity(wallet.getQuantity());
@@ -40,12 +35,6 @@ public class WalletRepositoryImpl implements WalletRepository {
         WalletEntity newEntity = walletJPARepository.save(oldEntity);
 
         return getDTOFrom(newEntity);
-    }
-
-    @Override
-    public Wallet findById(Long id) {
-        WalletEntity walletEntity = walletJPARepository.findById(id).orElseThrow(() -> new WalletNotFoundException(id));
-        return getDTOFrom(walletEntity);
     }
 
     private WalletEntity getEntityFrom(Wallet wallet) {

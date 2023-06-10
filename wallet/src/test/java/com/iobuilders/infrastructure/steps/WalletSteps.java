@@ -1,11 +1,11 @@
 package com.iobuilders.infrastructure.steps;
 
 import com.iobuilders.ScenarioContext;
+import com.iobuilders.domain.WalletObjectMother;
 import com.iobuilders.domain.dto.Wallet;
 import com.iobuilders.http.HttpClient;
 import com.iobuilders.http.HttpMethod;
 import com.iobuilders.http.HttpRequest;
-import com.iobuilders.wallet.domain.WalletObjectMother;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import org.springframework.beans.factory.annotation.Autowired;

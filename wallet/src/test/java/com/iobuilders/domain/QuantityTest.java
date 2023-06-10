@@ -1,4 +1,4 @@
-package com.iobuilders.wallet.domain;
+package com.iobuilders.domain;
 
 import com.iobuilders.domain.dto.Quantity;
 import com.iobuilders.domain.exceptions.QuantityNotValidException;

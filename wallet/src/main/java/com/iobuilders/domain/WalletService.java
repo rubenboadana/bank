@@ -7,8 +7,6 @@ public interface WalletService {
 
     WalletID create(Wallet wallet);
 
-    void delete(Long id);
-
     Wallet update(Long id, Wallet wallet);
 
 }

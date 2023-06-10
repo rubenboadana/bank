@@ -1,11 +1,9 @@
-package com.iobuilders.wallet.application;
+package com.iobuilders.application;
 
-import com.iobuilders.application.WalletServiceImpl;
+import com.iobuilders.domain.WalletObjectMother;
 import com.iobuilders.domain.WalletRepository;
 import com.iobuilders.domain.dto.Wallet;
 import com.iobuilders.domain.dto.WalletID;
-import com.iobuilders.domain.exceptions.UserNotFoundException;
-import com.iobuilders.wallet.domain.WalletObjectMother;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -13,8 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
 final class WalletServiceTest {
@@ -38,27 +35,6 @@ final class WalletServiceTest {
 
         //Then
         assertThat(newId).isEqualTo(expectedId);
-    }
-
-    @Test
-    void should_throwException_when_WalletNotFound() {
-        //Given
-        doThrow(new UserNotFoundException(WALLET_ID)).when(walletRepositoryMock).findById(WALLET_ID);
-
-        //When/Then
-        assertThrows(UserNotFoundException.class, () -> sut.delete(WALLET_ID));
-    }
-
-    @Test
-    void should_succeed_when_deleteIsPossible() {
-        //Given
-        doReturn(WalletObjectMother.basic()).when(walletRepositoryMock).findById(WALLET_ID);
-
-        //When
-        sut.delete(WALLET_ID);
-
-        //Then
-        verify(walletRepositoryMock, times(1)).delete(WALLET_ID);
     }
 
     @Test

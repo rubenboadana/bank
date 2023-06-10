@@ -24,17 +24,8 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public void delete(Long id) {
-        checkIfExists(id);
-        repository.delete(id);
-    }
-
-    @Override
     public Wallet update(Long id, Wallet wallet) {
         return repository.update(id, wallet);
     }
 
-    private void checkIfExists(Long id) {
-        repository.findById(id);
-    }
 }

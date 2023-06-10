@@ -7,10 +7,6 @@ public interface WalletRepository {
 
     WalletID create(Wallet wallet);
 
-    void delete(Long id);
-
     Wallet update(Long id, Wallet wallet);
-
-    Wallet findById(Long id);
 
 }

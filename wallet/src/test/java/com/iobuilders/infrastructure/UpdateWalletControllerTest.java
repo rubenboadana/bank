@@ -1,11 +1,11 @@
-package com.iobuilders.wallet.infrastructure;
+package com.iobuilders.infrastructure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.iobuilders.domain.WalletObjectMother;
 import com.iobuilders.domain.WalletService;
 import com.iobuilders.domain.dto.Wallet;
 import com.iobuilders.domain.exceptions.WalletNotFoundException;
 import com.iobuilders.infrastructure.controller.UpdateWalletController;
-import com.iobuilders.wallet.domain.WalletObjectMother;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
