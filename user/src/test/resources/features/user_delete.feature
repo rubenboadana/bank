@@ -11,5 +11,5 @@ Feature: User delete use cases
     Then response code is "404"
     And response body is:
       """
-      {"message":"Could not find the requested resource: User with id 40"}
+      {"message":"Could not find the requested resource: User with id 66929514-237c-11ed-861d-0242ac120002"}
       """

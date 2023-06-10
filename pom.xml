@@ -34,6 +34,7 @@
 		<jaxb-impl.version>2.2.5-b10</jaxb-impl.version>
 		<snakeyaml.version>2.0</snakeyaml.version>
 		<axon-spring-boot-starter.version>4.7.5</axon-spring-boot-starter.version>
+		<axon-server-testcontainer.version>0.1.0</axon-server-testcontainer.version>
 	</properties>
 
 	<dependencyManagement>
@@ -64,6 +65,12 @@
 			<groupId>org.axonframework</groupId>
 			<artifactId>axon-spring-boot-starter</artifactId>
 			<version>${axon-spring-boot-starter.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.holixon.axon.testing</groupId>
+			<artifactId>axon-server-testcontainer</artifactId>
+			<version>${axon-server-testcontainer.version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

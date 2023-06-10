@@ -57,6 +57,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     private UserEntity getEntityFrom(User user) {
         return UserEntity.builder()
+                .id(user.id())
                 .userName(user.userName())
                 .password(user.password())
                 .name(user.name())

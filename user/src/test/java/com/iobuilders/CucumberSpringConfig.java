@@ -4,6 +4,8 @@ import io.cucumber.java.After;
 import io.cucumber.java.AfterAll;
 import io.cucumber.java.BeforeAll;
 import io.cucumber.spring.CucumberContextConfiguration;
+import io.holixon.axon.testcontainer.AxonServerContainer;
+import io.holixon.axon.testcontainer.spring.AxonServerContainerSpring;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,18 +26,23 @@ public class CucumberSpringConfig {
     private static final DockerImageName postgres = DockerImageName
             .parse("postgres:13.1-alpine")
             .asCompatibleSubstituteFor("postgres");
-    private static PostgreSQLContainer DATABASE;
+
+    public static final AxonServerContainer AXON = AxonServerContainer.builder()
+            .enableDevMode()
+            .build();
+
+    private static final PostgreSQLContainer DATABASE = new PostgreSQLContainer<>(postgres)
+            .withDatabaseName(POSTGRES_DB)
+            .withUsername(POSTGRES_USER)
+            .withPassword(POSTGRES_PASSWORD);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @BeforeAll
     public static void setup() {
-        DATABASE = new PostgreSQLContainer<>(postgres)
-                .withDatabaseName(POSTGRES_DB)
-                .withUsername(POSTGRES_USER)
-                .withPassword(POSTGRES_PASSWORD);
         DATABASE.start();
+        AXON.start();
     }
 
     @After
@@ -47,6 +54,7 @@ public class CucumberSpringConfig {
     @AfterAll
     public static void tearDown() {
         DATABASE.stop();
+        AXON.stop();
     }
 
     @DynamicPropertySource
@@ -54,6 +62,7 @@ public class CucumberSpringConfig {
         registry.add("spring.datasource.url", DATABASE::getJdbcUrl);
         registry.add("spring.datasource.password", DATABASE::getPassword);
         registry.add("spring.datasource.username", DATABASE::getUsername);
+        AxonServerContainerSpring.addDynamicProperties(AXON, registry);
     }
 
 }

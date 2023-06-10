@@ -35,9 +35,9 @@ class DeleteUserControllerTest {
         doThrow(new UserNotFoundException(USER_ID)).when(userServiceMock).delete(USER_ID);
 
         //When/Then
-        mockMvc.perform(delete("/users/1"))
+        mockMvc.perform(delete("/users/" + USER_ID))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message", is("Could not find the requested resource: User with id 1")));
+                .andExpect(jsonPath("$.message", is("Could not find the requested resource: User with id 26929514-237c-11ed-861d-0242ac120002")));
 
     }
 
@@ -47,7 +47,7 @@ class DeleteUserControllerTest {
         doThrow(new RuntimeException()).when(userServiceMock).delete(USER_ID);
 
         //When/Then
-        mockMvc.perform(delete("/users/1"))
+        mockMvc.perform(delete("/users/" + USER_ID))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
@@ -58,7 +58,7 @@ class DeleteUserControllerTest {
         doNothing().when(userServiceMock).delete(USER_ID);
 
         //When/Then
-        mockMvc.perform(delete("/users/1"))
+        mockMvc.perform(delete("/users/" + USER_ID))
                 .andExpect(status().isOk());
     }
 

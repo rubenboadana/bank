@@ -19,8 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserSteps {
     private static final String VALID_USER = "valid";
-    private static final int DEFAULT_USER_ID = 1;
-    private static final int NOT_EXISTING_USER_ID = 40;
+    private static final String DEFAULT_USER_ID = "26929514-237c-11ed-861d-0242ac120002";
+    private static final String NOT_EXISTING_USER_ID = "66929514-237c-11ed-861d-0242ac120002";
     @Autowired
     private HttpClient httpClient;
 
@@ -48,7 +48,7 @@ public class UserSteps {
 
     @When("^(valid|invalid) user delete request is sent$")
     public void userDeleteIsRequested(String requestType) {
-        int userID = VALID_USER.equals(requestType) ? DEFAULT_USER_ID : NOT_EXISTING_USER_ID;
+        String userID = VALID_USER.equals(requestType) ? DEFAULT_USER_ID : NOT_EXISTING_USER_ID;
         ResponseEntity<String> response = doDeleteRequest(userID);
         context.setResponse(response);
     }
@@ -61,7 +61,7 @@ public class UserSteps {
 
     }
 
-    private ResponseEntity<String> doDeleteRequest(int userId) {
+    private ResponseEntity<String> doDeleteRequest(String userId) {
         User user = UserObjectMother.basic();
 
         final HttpRequest<User> httpRequest = HttpClient.createHttpRequest(HttpMethod.DELETE, "/users/" + userId, user);

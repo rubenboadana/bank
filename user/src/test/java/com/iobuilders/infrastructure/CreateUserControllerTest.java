@@ -14,15 +14,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.concurrent.CompletableFuture;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = CreateUserController.class)
 @AutoConfigureMockMvc
@@ -38,7 +39,7 @@ class CreateUserControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void should_responseInternalError_when_internalErrorIsProduced() throws Exception {
+    void should_responseBadRequestError_when_CommandHandlerFailureIsProduced() throws Exception {
         //Given
         doThrow(new CommandExecutionException("Command handler thrown an exception", new RuntimeException())).when(commandBusMock).send(any(CreateUserCommand.class));
 
@@ -52,11 +53,16 @@ class CreateUserControllerTest {
     @Test
     void should_returnHTTP200_when_orderCreationSucceed() throws Exception {
         //Given
-        doReturn(new CompletableFuture<Void>()).when(commandBusMock).send(any(CreateUserCommand.class));
+        CompletableFuture completedFuture = CompletableFuture.completedFuture(null);
+        doReturn(completedFuture).when(commandBusMock).send(any(CreateUserCommand.class));
+        User user = UserObjectMother.basic();
 
         //When/Then
-        User user = UserObjectMother.basic();
-        mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(user)))
+        MvcResult mvcResult = this.mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(user)))
+                .andExpect(request().asyncStarted())
+                .andReturn();
+
+        mockMvc.perform(asyncDispatch(mvcResult))
                 .andExpect(status().isCreated());
     }
 
