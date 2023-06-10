@@ -3,6 +3,7 @@ package com.iobuilders.infrastructure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iobuilders.domain.WalletObjectMother;
 import com.iobuilders.domain.WalletService;
+import com.iobuilders.domain.dto.Quantity;
 import com.iobuilders.domain.dto.Wallet;
 import com.iobuilders.domain.exceptions.WalletNotFoundException;
 import com.iobuilders.infrastructure.controller.UpdateWalletController;
@@ -40,7 +41,7 @@ class UpdateWalletControllerTest {
     @Test
     void should_responseWalletNotFound_when_invalidWalletIdProvided() throws Exception {
         //Given
-        doThrow(new WalletNotFoundException(WALLET_ID)).when(walletServiceMock).update(any(), any(Wallet.class));
+        doThrow(new WalletNotFoundException(WALLET_ID)).when(walletServiceMock).deposit(any(), any(Quantity.class));
 
         //When/Then
         Wallet wallet = WalletObjectMother.basic();
@@ -55,7 +56,7 @@ class UpdateWalletControllerTest {
     @Test
     void should_responseInternalError_when_internalErrorIsProduced() throws Exception {
         //Given
-        doThrow(new RuntimeException()).when(walletServiceMock).update(any(), any(Wallet.class));
+        doThrow(new RuntimeException()).when(walletServiceMock).deposit(any(), any(Quantity.class));
 
         //When/Then
         Wallet wallet = WalletObjectMother.basic();
@@ -66,13 +67,13 @@ class UpdateWalletControllerTest {
 
 
     @Test
-    void should_returnHTTP200_when_updateWalletSucceed() throws Exception {
+    void should_returnHTTP200_when_depositIntoWalletSucceed() throws Exception {
         //Given
         Wallet expectedWallet = WalletObjectMother.withQuantity(NEW_WALLET_QUANTITY);
-        doReturn(expectedWallet).when(walletServiceMock).update(any(), any(Wallet.class));
+        doReturn(expectedWallet).when(walletServiceMock).deposit(any(), any(Quantity.class));
 
         //When/Then
-        mockMvc.perform(put("/wallets/" + WALLET_ID).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(expectedWallet)))
+        mockMvc.perform(put("/wallets/" + WALLET_ID).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(new Quantity(NEW_WALLET_QUANTITY))))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.quantity", is(NEW_WALLET_QUANTITY)));

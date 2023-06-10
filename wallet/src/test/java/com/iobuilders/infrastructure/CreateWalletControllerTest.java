@@ -30,8 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = CreateWalletController.class)
 @AutoConfigureMockMvc(addFilters = false)
 class CreateWalletControllerTest {
-
-    private static final String NEW_WALLET_ID = "26929514-237c-11ed-861d-0242ac120002";
+    public static final String USERNAME = "rubenboada";
 
     @MockBean
     private CommandBus commandBusMock;
@@ -61,16 +60,10 @@ class CreateWalletControllerTest {
         doReturn(completedFuture).when(commandBusMock).send(any(CreateWalletCommand.class));
         Wallet wallet = WalletObjectMother.basic();
 
-        SecurityContextHolder.setContext(
-                SecurityContextHolder.createEmptyContext()
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(
-                new TestingAuthenticationToken("rubenboada", null)
-        );
+        SecurityContextHolder.setContext(SecurityContextHolder.createEmptyContext());
+        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(USERNAME, null));
 
         //When/Then
-
         MvcResult mvcResult = this.mockMvc.perform(post("/wallets").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(wallet)))
                 .andExpect(request().asyncStarted())
                 .andReturn();

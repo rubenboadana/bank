@@ -4,6 +4,7 @@ import com.iobuilders.domain.WalletObjectMother;
 import com.iobuilders.domain.WalletRepository;
 import com.iobuilders.domain.bus.event.EventBus;
 import com.iobuilders.domain.bus.event.WalletCreatedEvent;
+import com.iobuilders.domain.dto.Quantity;
 import com.iobuilders.domain.dto.Wallet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,13 +47,13 @@ final class WalletServiceTest {
         //Given
         Wallet wallet = WalletObjectMother.basic();
         Wallet expectedWallet = WalletObjectMother.withQuantity(NEW_WALLET_QUANTITY);
-        doReturn(expectedWallet).when(walletRepositoryMock).update(WALLET_ID, wallet);
+        doReturn(expectedWallet).when(walletRepositoryMock).deposit(WALLET_ID, new Quantity(wallet.getQuantity()));
 
         //When
-        Wallet receivedWallet = sut.update(WALLET_ID, wallet);
+        Wallet receivedWallet = sut.deposit(WALLET_ID, new Quantity(wallet.getQuantity()));
 
         //Then
-        assertThat(expectedWallet.getQuantity()).isEqualTo(NEW_WALLET_QUANTITY);
+        assertThat(receivedWallet.getQuantity()).isEqualTo(NEW_WALLET_QUANTITY);
     }
 
 }

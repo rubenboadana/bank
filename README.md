@@ -25,7 +25,7 @@
     * Build
     * Code coverage report
     * OWASP Dependencies checker
-* **Architecture**: Modulith with Hexagonal architecture + CQRS with Axon Server\
+* **Architecture**: Modulith with Hexagonal architecture + CQRS + pub/sub events with Axon Server\
   The aim of this logical separation by feature/domain is keep delivering the application as a monolith due its
   simplicity but let us promote those modules which could require scalability in human/resource terms in an easy way.
 

@@ -1,12 +1,16 @@
 package com.iobuilders.domain.dto;
 
 import com.iobuilders.domain.exceptions.QuantityNotValidException;
-import lombok.Getter;
+import lombok.*;
 
+@NoArgsConstructor
+@Builder
 @Getter
+@Setter
+@EqualsAndHashCode
 public class Quantity {
 
-    private final double value;
+    private double value;
 
     public Quantity(double value) {
         if (value < 0) {

@@ -4,6 +4,7 @@ import com.iobuilders.domain.WalletRepository;
 import com.iobuilders.domain.WalletService;
 import com.iobuilders.domain.bus.event.EventBus;
 import com.iobuilders.domain.bus.event.WalletCreatedEvent;
+import com.iobuilders.domain.dto.Quantity;
 import com.iobuilders.domain.dto.Wallet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,8 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public synchronized Wallet update(String id, Wallet wallet) {
-        return repository.update(id, wallet);
+    public synchronized Wallet deposit(String walletId, Quantity quantity) {
+        return repository.deposit(walletId, quantity);
     }
 
 }

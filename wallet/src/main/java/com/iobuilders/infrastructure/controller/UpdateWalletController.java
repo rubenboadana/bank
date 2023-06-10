@@ -1,8 +1,8 @@
 package com.iobuilders.infrastructure.controller;
 
 import com.iobuilders.domain.WalletService;
+import com.iobuilders.domain.dto.Quantity;
 import com.iobuilders.domain.dto.Wallet;
-import com.iobuilders.domain.dto.WalletID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -28,11 +28,11 @@ public class UpdateWalletController {
         this.walletService = walletService;
     }
 
-    @Operation(summary = "Update the wallet information")
+    @Operation(summary = "Deposit money to the specified wallet")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Wallet updated",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = WalletID.class))}),
+                            schema = @Schema(implementation = Wallet.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid wallet information supplied",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Wallet not found",
@@ -40,8 +40,8 @@ public class UpdateWalletController {
             @ApiResponse(responseCode = "500", description = "Wallet update failure",
                     content = @Content)})
     @PutMapping(value = "/wallets/{id}")
-    public ResponseEntity updateWallet(@PathVariable(value = "id") String id, @Valid @RequestBody Wallet wallet) {
-        Wallet updatedWallet = walletService.update(id, wallet);
+    public ResponseEntity<Wallet> updateWallet(@PathVariable(value = "id") String walletId, @Valid @RequestBody Quantity quantity) {
+        Wallet updatedWallet = walletService.deposit(walletId, quantity);
         return ResponseEntity.status(HttpStatus.OK).body(updatedWallet);
     }
 }

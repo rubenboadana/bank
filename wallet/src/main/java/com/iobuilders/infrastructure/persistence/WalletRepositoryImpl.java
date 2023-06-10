@@ -19,15 +19,15 @@ public class WalletRepositoryImpl implements WalletRepository {
     }
 
     @Override
-    public void create(Wallet wallet) {
+    public synchronized void create(Wallet wallet) {
         WalletEntity entity = getEntityFrom(wallet);
         walletJPARepository.save(entity);
     }
 
     @Override
-    public Wallet update(String id, Wallet wallet) {
+    public synchronized Wallet deposit(String id, Quantity quantity) {
         WalletEntity oldEntity = walletJPARepository.findById(id).orElseThrow(() -> new WalletNotFoundException(id));
-        oldEntity.setQuantity(wallet.getQuantity());
+        oldEntity.setQuantity(oldEntity.getQuantity() + quantity.getValue());
 
         WalletEntity newEntity = walletJPARepository.save(oldEntity);
 
