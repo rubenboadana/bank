@@ -40,7 +40,7 @@ public class UpdateUserController {
             @ApiResponse(responseCode = "500", description = "User update failure",
                     content = @Content)})
     @PutMapping(value = "/users/{id}")
-    public ResponseEntity updateUser(@PathVariable(value = "id") Long id, @Valid @RequestBody User user) {
+    public ResponseEntity updateUser(@PathVariable(value = "id") String id, @Valid @RequestBody User user) {
         User updatedUser = userService.update(id, user);
         return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }

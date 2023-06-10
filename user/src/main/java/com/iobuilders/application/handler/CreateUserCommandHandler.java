@@ -19,7 +19,7 @@ public class CreateUserCommandHandler implements CommandHandler<CreateUserComman
     @Override
     @org.axonframework.commandhandling.CommandHandler
     public void handle(CreateUserCommand command) {
-        User user = new User(null, command.getUserName(), command.getPassword(), command.getName(), command.getSurname());
+        User user = new User(command.getId(), command.getUserName(), command.getPassword(), command.getName(), command.getSurname());
         userservice.create(user);
     }
 }

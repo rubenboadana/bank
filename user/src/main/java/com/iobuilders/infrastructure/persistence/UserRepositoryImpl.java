@@ -27,12 +27,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         userJPARepository.deleteById(id);
     }
 
     @Override
-    public User update(Long id, User user) {
+    public User update(String id, User user) {
         UserEntity oldEntity = userJPARepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         oldEntity.setName(user.name());
         oldEntity.setSurname(user.surname());
@@ -43,7 +43,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User findById(Long id) {
+    public User findById(String id) {
         UserEntity userEntity = userJPARepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         return getDTOFrom(userEntity);
     }

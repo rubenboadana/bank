@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 final class UserServiceTest {
 
-    private static final Long USER_ID = 1L;
+    private static final String USER_ID = "26929514-237c-11ed-861d-0242ac120002";
     private static final String NEW_USER_NAME = "Rb";
     @Mock
     private UserRepository userRepositoryMock;

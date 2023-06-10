@@ -41,7 +41,7 @@ public class CreateUserController {
                     content = @Content)})
     @PostMapping(value = "/users/register")
     public CompletableFuture<ResponseEntity<Void>> createUser(@Valid @RequestBody User user) throws InterruptedException {
-        return commandBus.send(new CreateUserCommand(user.userName(), user.password(), user.name(), user.surname()))
+        return commandBus.send(new CreateUserCommand(user.id(), user.userName(), user.password(), user.name(), user.surname()))
                 .thenApply(response -> ResponseEntity.status(HttpStatus.CREATED).build());
     }
 }

@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class DeleteUserControllerTest {
 
-    private static final Long USER_ID = 1L;
+    private static final String USER_ID = "26929514-237c-11ed-861d-0242ac120002";
 
     @MockBean
     private UserService userServiceMock;

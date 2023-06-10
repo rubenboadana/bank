@@ -29,13 +29,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         checkIfExists(id);
         repository.delete(id);
     }
 
     @Override
-    public User update(Long id, User user) {
+    public User update(String id, User user) {
         return repository.update(id, user);
     }
 
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
         return jwtGeneratorService.generateToken(user);
     }
 
-    private void checkIfExists(Long id) {
+    private void checkIfExists(String id) {
         repository.findById(id);
     }
 }

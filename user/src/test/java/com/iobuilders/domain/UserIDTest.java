@@ -12,8 +12,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class UserIDTest {
 
     @Test
-    void should_throwException_when_idIsEqualOrLowerThanZero() {
-        assertThrows(InvalidUserIDException.class, () -> new UserID(0L));
-        assertThrows(InvalidUserIDException.class, () -> new UserID(-1L));
+    void should_throwException_when_idIsNotUUIDCompliant() {
+        assertThrows(InvalidUserIDException.class, () -> new UserID("dasdas"));
+        assertThrows(InvalidUserIDException.class, () -> new UserID(""));
     }
 }

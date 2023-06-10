@@ -32,7 +32,7 @@ public class DeleteUserController {
             @ApiResponse(responseCode = "500", description = "User deletion failure",
                     content = @Content)})
     @DeleteMapping(value = "/users/{id}")
-    public ResponseEntity deleteUser(@PathVariable(value = "id") Long id) {
+    public ResponseEntity deleteUser(@PathVariable(value = "id") String id) {
         userService.delete(id);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
