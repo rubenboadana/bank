@@ -40,7 +40,7 @@ public class UpdateWalletController {
             @ApiResponse(responseCode = "500", description = "Wallet update failure",
                     content = @Content)})
     @PutMapping(value = "/wallets/{id}")
-    public ResponseEntity updateWallet(@PathVariable(value = "id") Long id, @Valid @RequestBody Wallet wallet) {
+    public ResponseEntity updateWallet(@PathVariable(value = "id") String id, @Valid @RequestBody Wallet wallet) {
         Wallet updatedWallet = walletService.update(id, wallet);
         return ResponseEntity.status(HttpStatus.OK).body(updatedWallet);
     }

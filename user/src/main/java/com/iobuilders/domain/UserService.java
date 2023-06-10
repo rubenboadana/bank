@@ -11,4 +11,6 @@ public interface UserService {
 
     JwtToken login(LoginRequest loginRequest);
 
+    void bindWallet(String username, String walletId);
+
 }

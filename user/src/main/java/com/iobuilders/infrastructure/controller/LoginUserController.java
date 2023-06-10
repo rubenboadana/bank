@@ -3,7 +3,6 @@ package com.iobuilders.infrastructure.controller;
 import com.iobuilders.domain.UserService;
 import com.iobuilders.domain.dto.JwtToken;
 import com.iobuilders.domain.dto.LoginRequest;
-import com.iobuilders.domain.dto.UserID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,7 +31,7 @@ public class LoginUserController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "User logged in",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserID.class))}),
+                            schema = @Schema(implementation = JwtToken.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid user information supplied",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "User not found",

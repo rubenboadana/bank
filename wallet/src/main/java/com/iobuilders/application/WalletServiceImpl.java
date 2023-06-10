@@ -2,8 +2,9 @@ package com.iobuilders.application;
 
 import com.iobuilders.domain.WalletRepository;
 import com.iobuilders.domain.WalletService;
+import com.iobuilders.domain.bus.event.EventBus;
+import com.iobuilders.domain.bus.event.WalletCreatedEvent;
 import com.iobuilders.domain.dto.Wallet;
-import com.iobuilders.domain.dto.WalletID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,19 +13,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class WalletServiceImpl implements WalletService {
     private final WalletRepository repository;
+    private final EventBus eventBus;
 
     @Autowired
-    public WalletServiceImpl(WalletRepository repository) {
+    public WalletServiceImpl(WalletRepository repository, EventBus eventBus) {
         this.repository = repository;
+        this.eventBus = eventBus;
     }
 
     @Override
-    public WalletID create(Wallet wallet) {
-        return repository.create(wallet);
+    public synchronized void create(Wallet wallet) throws InterruptedException {
+        repository.create(wallet);
+        eventBus.publish(new WalletCreatedEvent(wallet.getOwnerUsername(), wallet.getId()));
     }
 
     @Override
-    public Wallet update(Long id, Wallet wallet) {
+    public synchronized Wallet update(String id, Wallet wallet) {
         return repository.update(id, wallet);
     }
 

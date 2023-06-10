@@ -21,6 +21,21 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfiguration {
 
+    private static final String[] WHITELIST = {
+            "/v2/api-docs",
+            "/v3/api-docs",
+            "/**/v3/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "**/swagger-ui.html",
+            "/**/swagger-ui.html**",
+            "/swagger-ui.html**",
+            "/webjars/**"
+    };
+
     private final UserDetailsService userDetailsService;
 
     @Autowired
@@ -56,25 +71,17 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain configurePublicEndpoints(HttpSecurity http) throws Exception {
-        http = http.cors().and().csrf().disable();
 
-        http = http
-                .sessionManagement()
+        http.csrf().disable();
+        http.sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and();
-
-        http.authorizeHttpRequests()
+                .and().authorizeHttpRequests()
                 .requestMatchers("/users/login").permitAll()
                 .requestMatchers("/users/register").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .requestMatchers(
-                        "/swagger-ui/**",
-                        "/configuration/ui",
-                        "/v3/api-docs/**",
-                        "/swagger-resources/**",
-                        "/configuration/security",
-                        "/webjars/**").permitAll()
-                .requestMatchers("/**").authenticated();
+                .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
+                .anyRequest().authenticated()
+                .and().cors();
 
         http.addFilterBefore(
                 authenticationJwtTokenFilter(),
@@ -83,4 +90,5 @@ public class SecurityConfiguration {
 
         return http.build();
     }
+
 }

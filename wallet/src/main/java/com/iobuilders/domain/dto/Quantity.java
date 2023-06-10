@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 public class Quantity {
 
-    private final int value;
+    private final double value;
 
-    public Quantity(int value) {
+    public Quantity(double value) {
         if (value < 0) {
             throw new QuantityNotValidException("Quantity cannot be lower than zero");
         }

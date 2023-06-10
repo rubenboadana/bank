@@ -10,16 +10,20 @@ import lombok.*;
 @Setter
 public class Wallet {
 
-    @JsonIgnore
-    private Long id;
+    private String id;
 
+    @JsonIgnore
     private WalletOwner owner;
 
     private Quantity quantity;
 
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity.getValue();
+    }
+
+    public String getOwnerUsername() {
+        return owner.username();
     }
 
 }

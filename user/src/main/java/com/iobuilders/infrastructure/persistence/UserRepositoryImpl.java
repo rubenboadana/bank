@@ -39,6 +39,13 @@ public class UserRepositoryImpl implements UserRepository {
         return getDTOFrom(userEntity);
     }
 
+    @Override
+    public void bindWallet(User user, String walletId) {
+        UserEntity entity = getEntityFrom(user);
+        entity.setWalletId(walletId);
+        userJPARepository.save(entity);
+    }
+
 
     private UserEntity getEntityFrom(User user) {
         return UserEntity.builder()

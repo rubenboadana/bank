@@ -1,4 +1,4 @@
-package com.iobuilders.application.handler;
+package com.iobuilders.domain.command;
 
 import com.iobuilders.domain.bus.command.Command;
 import lombok.Getter;

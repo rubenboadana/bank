@@ -1,6 +1,9 @@
 package com.iobuilders.infrastructure.persistence;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.*;
 
 import java.io.Serializable;
@@ -14,13 +17,12 @@ import java.io.Serializable;
 @Table(name = "wallets")
 public class WalletEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column
-    private int quantity;
+    private double quantity;
 
     @Column
-    private String ownerId;
+    private String owner;
 
 }

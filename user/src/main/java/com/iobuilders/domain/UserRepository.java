@@ -12,4 +12,6 @@ public interface UserRepository {
     Optional<User> findByUserNameAndPassword(String userName, String password);
 
     Optional<User> findByUserName(String userName);
+
+    void bindWallet(User user, String walletId);
 }

@@ -2,6 +2,7 @@ package com.iobuilders.application.handler;
 
 import com.iobuilders.domain.UserService;
 import com.iobuilders.domain.bus.command.CommandHandler;
+import com.iobuilders.domain.command.CreateUserCommand;
 import com.iobuilders.domain.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

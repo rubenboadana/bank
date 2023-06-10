@@ -6,7 +6,7 @@ import com.iobuilders.domain.dto.WalletOwner;
 
 public class WalletObjectMother {
 
-    public static final Long DEFAULT_WALLET_OWNER_ID = 1L;
+    public static final String DEFAULT_WALLET_OWNER_ID = "26929514-237c-11ed-861d-0242ac120002";
 
     public static final int DEFAULT_WALLET_QUANTITY = 10;
 
@@ -17,7 +17,7 @@ public class WalletObjectMother {
                 .build();
     }
 
-    public static Wallet withQuantity(int quantity) {
+    public static Wallet withQuantity(double quantity) {
         return Wallet.builder()
                 .owner(new WalletOwner(DEFAULT_WALLET_OWNER_ID))
                 .quantity(new Quantity(quantity))

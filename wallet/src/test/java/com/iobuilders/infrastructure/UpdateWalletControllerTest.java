@@ -25,8 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 class UpdateWalletControllerTest {
 
-    private static final Long WALLET_ID = 1L;
-    private static final int NEW_WALLET_QUANTITY = 120;
+    private static final String WALLET_ID = "26929514-237c-11ed-861d-0242ac120002";
+    private static final double NEW_WALLET_QUANTITY = 120.0;
 
     @MockBean
     private WalletService walletServiceMock;
@@ -44,10 +44,10 @@ class UpdateWalletControllerTest {
 
         //When/Then
         Wallet wallet = WalletObjectMother.basic();
-        mockMvc.perform(put("/wallets/1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(wallet)))
+        mockMvc.perform(put("/wallets/" + WALLET_ID).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(wallet)))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.message", is("Could not find the requested resource: Wallet with id 1")));
+                .andExpect(jsonPath("$.message", is("Could not find the requested resource: Wallet with id " + WALLET_ID)));
 
     }
 
@@ -59,7 +59,7 @@ class UpdateWalletControllerTest {
 
         //When/Then
         Wallet wallet = WalletObjectMother.basic();
-        mockMvc.perform(put("/wallets/1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(wallet)))
+        mockMvc.perform(put("/wallets/" + WALLET_ID).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(wallet)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
@@ -72,7 +72,7 @@ class UpdateWalletControllerTest {
         doReturn(expectedWallet).when(walletServiceMock).update(any(), any(Wallet.class));
 
         //When/Then
-        mockMvc.perform(put("/wallets/1").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(expectedWallet)))
+        mockMvc.perform(put("/wallets/" + WALLET_ID).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(expectedWallet)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.quantity", is(NEW_WALLET_QUANTITY)));

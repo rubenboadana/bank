@@ -1,12 +1,10 @@
 package com.iobuilders.infrastructure.controller;
 
-import com.iobuilders.application.handler.CreateUserCommand;
 import com.iobuilders.domain.bus.command.CommandBus;
+import com.iobuilders.domain.command.CreateUserCommand;
 import com.iobuilders.domain.dto.User;
-import com.iobuilders.domain.dto.UserID;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -33,8 +31,7 @@ public class CreateUserController {
     @Operation(summary = "Create a new user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "User created",
-                    content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = UserID.class))}),
+                    content = @Content),
             @ApiResponse(responseCode = "400", description = "Invalid user information supplied",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "User creation failure",

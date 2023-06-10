@@ -2,12 +2,16 @@ package com.iobuilders.domain.dto;
 
 import com.iobuilders.domain.exceptions.InvalidWalletIDException;
 
-public record WalletID(Long id) {
-    private static final String IDENTIFIER_LOWER_THAN_ONE = "Wallet id can't be lower than 1";
+import java.util.UUID;
+
+public record WalletID(String id) {
 
     public WalletID {
-        if (id <= 0) {
-            throw new InvalidWalletIDException(IDENTIFIER_LOWER_THAN_ONE);
+        try {
+            UUID.fromString(id);
+        } catch (IllegalArgumentException ex) {
+            throw new InvalidWalletIDException(id);
         }
     }
+
 }

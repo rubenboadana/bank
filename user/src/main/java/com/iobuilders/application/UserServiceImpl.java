@@ -54,4 +54,11 @@ public class UserServiceImpl implements UserService {
         return jwtService.generateToken(user);
     }
 
+    @Override
+    public void bindWallet(String userName, String walletId) {
+        User user = repository.findByUserName(userName).orElseThrow(() -> new UserNotFoundException(userName));
+        repository.bindWallet(user, walletId);
+    }
+
+
 }

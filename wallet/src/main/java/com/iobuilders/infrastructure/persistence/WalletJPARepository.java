@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface WalletJPARepository extends JpaRepository<WalletEntity, Long> {
+public interface WalletJPARepository extends JpaRepository<WalletEntity, String> {
 }

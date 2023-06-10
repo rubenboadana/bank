@@ -3,7 +3,6 @@ package com.iobuilders.infrastructure.persistence;
 import com.iobuilders.domain.WalletRepository;
 import com.iobuilders.domain.dto.Quantity;
 import com.iobuilders.domain.dto.Wallet;
-import com.iobuilders.domain.dto.WalletID;
 import com.iobuilders.domain.dto.WalletOwner;
 import com.iobuilders.domain.exceptions.WalletNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +19,13 @@ public class WalletRepositoryImpl implements WalletRepository {
     }
 
     @Override
-    public WalletID create(Wallet wallet) {
+    public void create(Wallet wallet) {
         WalletEntity entity = getEntityFrom(wallet);
-        WalletEntity response = walletJPARepository.save(entity);
-
-        return new WalletID(response.getId());
+        walletJPARepository.save(entity);
     }
 
     @Override
-    public Wallet update(Long id, Wallet wallet) {
+    public Wallet update(String id, Wallet wallet) {
         WalletEntity oldEntity = walletJPARepository.findById(id).orElseThrow(() -> new WalletNotFoundException(id));
         oldEntity.setQuantity(wallet.getQuantity());
 
@@ -39,7 +36,9 @@ public class WalletRepositoryImpl implements WalletRepository {
 
     private WalletEntity getEntityFrom(Wallet wallet) {
         return WalletEntity.builder()
+                .id(wallet.getId())
                 .quantity(wallet.getQuantity())
+                .owner(wallet.getOwnerUsername())
                 .build();
     }
 

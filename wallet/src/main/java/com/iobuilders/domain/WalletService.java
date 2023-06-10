@@ -1,12 +1,11 @@
 package com.iobuilders.domain;
 
 import com.iobuilders.domain.dto.Wallet;
-import com.iobuilders.domain.dto.WalletID;
 
 public interface WalletService {
 
-    WalletID create(Wallet wallet);
+    void create(Wallet wallet) throws InterruptedException;
 
-    Wallet update(Long id, Wallet wallet);
+    Wallet update(String id, Wallet wallet);
 
 }
