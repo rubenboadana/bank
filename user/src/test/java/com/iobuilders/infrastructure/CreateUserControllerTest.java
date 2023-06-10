@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = CreateUserController.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 class CreateUserControllerTest {
 
     @MockBean
@@ -37,6 +37,7 @@ class CreateUserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
 
     @Test
     void should_responseBadRequestError_when_CommandHandlerFailureIsProduced() throws Exception {
@@ -51,7 +52,7 @@ class CreateUserControllerTest {
     }
 
     @Test
-    void should_returnHTTP200_when_orderCreationSucceed() throws Exception {
+    void should_returnHTTP200_when_UserCreationSucceed() throws Exception {
         //Given
         CompletableFuture completedFuture = CompletableFuture.completedFuture(null);
         doReturn(completedFuture).when(commandBusMock).send(any(CreateUserCommand.class));

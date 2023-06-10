@@ -1,4 +1,4 @@
-version: '2'
+version: '3.3'
 
 services:
   app:
@@ -16,6 +16,8 @@ services:
       - SPRING_DATASOURCE_USERNAME=example
       - SPRING_DATASOURCE_PASSWORD=1234
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+    networks:
+      - axon-demo
     #Overwrite the default application Dockerfile entrypoint to start up the process with the non-blocking debug mode listening at port 5005
     entrypoint: java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 org.springframework.boot.loader.JarLauncher
 
@@ -26,3 +28,18 @@ services:
       - POSTGRES_USER=example
       - POSTGRES_PASSWORD=1234
       - POSTGRES_DB=bank
+    networks:
+      - axon-demo
+
+  axonserver:
+    image: axoniq/axonserver
+    hostname: axonserver
+    ports:
+      - '8024:8024'
+      - '8124:8124'
+      - '8224:8224'
+    networks:
+      - axon-demo
+
+networks:
+  axon-demo:

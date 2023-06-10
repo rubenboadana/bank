@@ -10,4 +10,5 @@ public interface UserService {
     UserID create(User user);
 
     JwtToken login(LoginRequest loginRequest);
+
 }

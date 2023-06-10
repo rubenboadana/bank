@@ -2,6 +2,7 @@ package com.iobuilders.infrastructure;
 
 import com.iobuilders.domain.dto.ErrorResponse;
 import com.iobuilders.domain.exceptions.BadRequestException;
+import com.iobuilders.domain.exceptions.InvalidCredentialsException;
 import com.iobuilders.domain.exceptions.ResourceConflictException;
 import com.iobuilders.domain.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,12 @@ public class ControllerExceptionHandler {
     public ResponseEntity handleConflictException(ResourceConflictException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity handleInvalidCredentialsException(InvalidCredentialsException ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(ex.getMessage()));
     }
 
 }
