@@ -6,6 +6,8 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.CompletableFuture;
+
 @Service
 public class AxonCommandBus implements CommandBus {
 
@@ -17,7 +19,7 @@ public class AxonCommandBus implements CommandBus {
     }
 
     @Override
-    public void send(Command command) {
-        commandGateway.send(command);
+    public CompletableFuture<Void> send(Command command) {
+        return commandGateway.send(command);
     }
 }

@@ -4,6 +4,7 @@ import com.iobuilders.domain.dto.ErrorResponse;
 import com.iobuilders.domain.exceptions.BadRequestException;
 import com.iobuilders.domain.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import org.axonframework.commandhandling.CommandExecutionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,6 +18,12 @@ public class ControllerExceptionHandler {
     public ResponseEntity unknownException(Exception ex) {
         log.error(ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(value = {CommandExecutionException.class})
+    public ResponseEntity commmandExecutionException(CommandExecutionException ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(BadRequestException.class)
