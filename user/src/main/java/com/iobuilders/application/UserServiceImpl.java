@@ -7,6 +7,8 @@ import com.iobuilders.domain.dto.JwtToken;
 import com.iobuilders.domain.dto.LoginRequest;
 import com.iobuilders.domain.dto.User;
 import com.iobuilders.domain.dto.UserID;
+import com.iobuilders.domain.exceptions.UserAlreadyExistsException;
+import com.iobuilders.domain.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,27 +27,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserID create(User user) {
+        checkUserNotAlreadyExist(user);
         return repository.create(user);
     }
 
-    @Override
-    public void delete(String id) {
-        checkIfExists(id);
-        repository.delete(id);
-    }
-
-    @Override
-    public User update(String id, User user) {
-        return repository.update(id, user);
+    private void checkUserNotAlreadyExist(User user) {
+        repository.findByUserName(user.userName()).ifPresent(userFound -> {
+            throw new UserAlreadyExistsException(userFound.userName());
+        });
     }
 
     @Override
     public JwtToken login(LoginRequest loginRequest) {
-        User user = repository.findByUserNameAndPassword(loginRequest.username(), loginRequest.password());
+        User user = repository.findByUserNameAndPassword(loginRequest.username(), loginRequest.password())
+                .orElseThrow(() -> new UserNotFoundException(loginRequest.username()));
+
         return jwtGeneratorService.generateToken(user);
     }
 
-    private void checkIfExists(String id) {
-        repository.findById(id);
-    }
 }

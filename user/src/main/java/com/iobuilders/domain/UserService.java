@@ -9,9 +9,5 @@ public interface UserService {
 
     UserID create(User user);
 
-    void delete(String id);
-
-    User update(String id, User user);
-
     JwtToken login(LoginRequest loginRequest);
 }

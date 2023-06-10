@@ -72,6 +72,9 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${code.coverage.overall.data.folder}</outputDirectory>
+                            <excludes>
+                                <exclude>**/Application.*</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>

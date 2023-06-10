@@ -35,6 +35,7 @@
 		<snakeyaml.version>2.0</snakeyaml.version>
 		<axon-spring-boot-starter.version>4.7.5</axon-spring-boot-starter.version>
 		<axon-server-testcontainer.version>0.1.0</axon-server-testcontainer.version>
+		<sonar.coverage.exclusions>**/Application.java</sonar.coverage.exclusions>
 	</properties>
 
 	<dependencyManagement>

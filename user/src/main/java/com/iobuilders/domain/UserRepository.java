@@ -3,17 +3,13 @@ package com.iobuilders.domain;
 import com.iobuilders.domain.dto.User;
 import com.iobuilders.domain.dto.UserID;
 
+import java.util.Optional;
+
 public interface UserRepository {
 
     UserID create(User user);
 
-    void delete(String id);
+    Optional<User> findByUserNameAndPassword(String userName, String password);
 
-    User update(String id, User user);
-
-    User findById(String id);
-
-    User findByUserNameAndPassword(String userName, String password);
-
-
+    Optional<User> findByUserName(String userName);
 }

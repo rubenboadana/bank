@@ -10,7 +10,7 @@ public record UserID(String id) {
         try {
             UUID.fromString(id);
         } catch (IllegalArgumentException ex) {
-            throw new InvalidUserIDException(ex.getMessage());
+            throw new InvalidUserIDException(id);
         }
     }
 }

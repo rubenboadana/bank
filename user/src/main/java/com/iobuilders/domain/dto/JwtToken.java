@@ -1,4 +1,4 @@
 package com.iobuilders.domain.dto;
 
-public record JwtToken(String value) {
+public record JwtToken(String token) {
 }

@@ -6,7 +6,7 @@ Feature: User login use cases
     Then response code is "200"
     And response body is like:
       """
-      {"value":"eyJhbGciOiJIUzI1NiJ9
+      {"token":"eyJhbGciOiJIUzI1NiJ9
       """
 
   Scenario: Login a user with unexisting values

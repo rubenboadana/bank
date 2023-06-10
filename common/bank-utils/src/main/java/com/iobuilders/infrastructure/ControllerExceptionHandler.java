@@ -2,6 +2,7 @@ package com.iobuilders.infrastructure;
 
 import com.iobuilders.domain.dto.ErrorResponse;
 import com.iobuilders.domain.exceptions.BadRequestException;
+import com.iobuilders.domain.exceptions.ResourceConflictException;
 import com.iobuilders.domain.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandExecutionException;
@@ -36,6 +37,12 @@ public class ControllerExceptionHandler {
     public ResponseEntity handleNotFoundException(ResourceNotFoundException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ResourceConflictException.class)
+    public ResponseEntity handleConflictException(ResourceConflictException ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(ex.getMessage()));
     }
 
 }

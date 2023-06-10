@@ -3,9 +3,10 @@ package com.iobuilders.infrastructure.persistence;
 import com.iobuilders.domain.UserRepository;
 import com.iobuilders.domain.dto.User;
 import com.iobuilders.domain.dto.UserID;
-import com.iobuilders.domain.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
@@ -27,30 +28,14 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void delete(String id) {
-        userJPARepository.deleteById(id);
-    }
-
-    @Override
-    public User update(String id, User user) {
-        UserEntity oldEntity = userJPARepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        oldEntity.setName(user.name());
-        oldEntity.setSurname(user.surname());
-
-        UserEntity newEntity = userJPARepository.save(oldEntity);
-
-        return getDTOFrom(newEntity);
-    }
-
-    @Override
-    public User findById(String id) {
-        UserEntity userEntity = userJPARepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+    public Optional<User> findByUserNameAndPassword(String userName, String password) {
+        Optional<UserEntity> userEntity = userJPARepository.findByUserNameAndPassword(userName, password);
         return getDTOFrom(userEntity);
     }
 
     @Override
-    public User findByUserNameAndPassword(String userName, String password) {
-        UserEntity userEntity = userJPARepository.findByUserNameAndPassword(userName, password).orElseThrow(() -> new UserNotFoundException(userName));
+    public Optional<User> findByUserName(String userName) {
+        Optional<UserEntity> userEntity = userJPARepository.findByUserName(userName);
         return getDTOFrom(userEntity);
     }
 
@@ -65,7 +50,14 @@ public class UserRepositoryImpl implements UserRepository {
                 .build();
     }
 
-    private User getDTOFrom(UserEntity userEntity) {
-        return new User(userEntity.getId(), userEntity.getUserName(), userEntity.getPassword(), userEntity.getName(), userEntity.getSurname());
+    private Optional<User> getDTOFrom(UserEntity userEntity) {
+        return Optional.of(new User(userEntity.getId(), userEntity.getUserName(), userEntity.getPassword(), userEntity.getName(), userEntity.getSurname()));
+    }
+
+    private Optional<User> getDTOFrom(Optional<UserEntity> optionalUserEntity) {
+        if (optionalUserEntity.isEmpty()) {
+            return Optional.empty();
+        }
+        return getDTOFrom(optionalUserEntity.get());
     }
 }
