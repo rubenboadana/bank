@@ -37,7 +37,7 @@
         <axon-server-testcontainer.version>0.1.0</axon-server-testcontainer.version>
         <sonar.coverage.exclusions>**/Application.java</sonar.coverage.exclusions>
         <spring-security-test.version>6.1.0</spring-security-test.version>
-        <code.coverage.overall.data.folder>${basedir}/target/site/jacoco/</code.coverage.overall.data.folder>
+        <code.coverage.overall.data.folder>${basedir}/../target/site/jacoco/</code.coverage.overall.data.folder>
     </properties>
 
 	<dependencyManagement>
