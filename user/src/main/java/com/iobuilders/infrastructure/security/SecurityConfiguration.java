@@ -1,6 +1,7 @@
 package com.iobuilders.infrastructure.security;
 
 import com.iobuilders.application.JwtTokenFilter;
+import jakarta.servlet.DispatcherType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,22 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @Configuration
 public class SecurityConfiguration {
-
-    private static final String[] WHITELIST = {
-            "/v2/api-docs",
-            "/v3/api-docs",
-            "/**/v3/api-docs",
-            "/swagger-resources",
-            "/swagger-resources/**",
-            "/configuration/ui",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "**/swagger-ui.html",
-            "/**/swagger-ui.html**",
-            "/swagger-ui.html**",
-            "/webjars/**"
-    };
-
     private final UserDetailsService userDetailsService;
 
     @Autowired
@@ -80,6 +65,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/users/register").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
+                .dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll()
                 .anyRequest().authenticated()
                 .and().cors();
 
