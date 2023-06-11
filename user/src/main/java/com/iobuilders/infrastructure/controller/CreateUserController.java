@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
+@Slf4j
 @Tag(name = "Users")
 public class CreateUserController {
     private final CommandBus commandBus;
@@ -38,7 +40,12 @@ public class CreateUserController {
                     content = @Content)})
     @PostMapping(value = "/users/register")
     public CompletableFuture<ResponseEntity<Void>> createUser(@Valid @RequestBody User user) throws InterruptedException {
+        log.info("CreateUserController:createUser: POST /users/register received");
+
         return commandBus.send(new CreateUserCommand(user.id(), user.userName(), user.password(), user.name(), user.surname()))
-                .thenApply(response -> ResponseEntity.status(HttpStatus.CREATED).build());
+                .thenApply(response -> {
+                    log.info("CreateUserController:createUser: POST /users/register dispatched");
+                    return ResponseEntity.status(HttpStatus.CREATED).build();
+                });
     }
 }

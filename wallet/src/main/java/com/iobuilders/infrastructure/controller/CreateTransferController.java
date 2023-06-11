@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
+@Slf4j
 @Tag(name = "Wallets")
 public class CreateTransferController {
 
@@ -48,10 +50,14 @@ public class CreateTransferController {
                     content = @Content)})
     @PostMapping(value = "/wallets/{id}/transactions")
     public CompletableFuture<ResponseEntity<Void>> doMoneyTransaction(@PathVariable(value = "id") String originWalletId, @Valid @RequestBody WalletTransaction transaction) throws InterruptedException {
+        log.info("CreateTransferController:doMoneyTransaction: POST /wallets" + originWalletId + "/transactions received");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
 
         return commandBus.send(new TransferMoneyCommand(currentUserName, originWalletId, transaction.getDestinyWalletId(), TransactionTypes.TRANSFERENCE, transaction.getQuantity()))
-                .thenApply(response -> ResponseEntity.status(HttpStatus.OK).build());
+                .thenApply(response -> {
+                    log.info("CreateTransferController:doMoneyTransaction: POST /wallets" + originWalletId + "/transactions dispatched");
+                    return ResponseEntity.status(HttpStatus.OK).build();
+                });
     }
 }

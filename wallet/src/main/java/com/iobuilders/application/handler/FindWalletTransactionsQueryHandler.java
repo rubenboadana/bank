@@ -22,6 +22,10 @@ public class FindWalletTransactionsQueryHandler implements QueryHandler<FindWall
     @Override
     @org.axonframework.queryhandling.QueryHandler
     public WalletOverview handle(FindWalletTransactionsQuery query) throws InterruptedException {
-        return walletService.findTransactionsByWalletId(query.getWalletId());
+        log.info("FindWalletTransactionsQueryHandler:handle: Query received");
+        WalletOverview walletOverview = walletService.findTransactionsByWalletId(query.getWalletId());
+        log.info("FindWalletTransactionsQueryHandler:handle: Query processed");
+
+        return walletOverview;
     }
 }

@@ -22,6 +22,7 @@ public class TransferMoneyCommandHandler implements CommandHandler<TransferMoney
     @Override
     @org.axonframework.commandhandling.CommandHandler
     public void handle(TransferMoneyCommand command) throws InterruptedException {
+        log.info("TransferMoneyCommandHandler:handle: Command received");
         WalletTransaction transaction = WalletTransaction.builder()
                 .createdBy(command.getCreatedBy())
                 .type(command.getType())
@@ -30,5 +31,6 @@ public class TransferMoneyCommandHandler implements CommandHandler<TransferMoney
                 .quantity(command.getQuantity())
                 .build();
         walletService.transfer(transaction);
+        log.info("TransferMoneyCommandHandler:handle: Command processed");
     }
 }

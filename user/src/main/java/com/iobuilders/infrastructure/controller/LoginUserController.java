@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@Slf4j
 @Tag(name = "Users")
 public class LoginUserController {
     private final UserService userService;
@@ -34,13 +36,18 @@ public class LoginUserController {
                             schema = @Schema(implementation = JwtToken.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid user information supplied",
                     content = @Content),
+            @ApiResponse(responseCode = "401", description = "Invalid credentials",
+                    content = @Content),
             @ApiResponse(responseCode = "404", description = "User not found",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal failure",
                     content = @Content)})
     @PostMapping(value = "/users/login")
     public ResponseEntity loginUser(@Valid @RequestBody LoginRequest loginRequest) {
+        log.info("LoginUserController:loginUser: POST /users/login received");
         JwtToken token = userService.login(loginRequest);
+        log.info("LoginUserController:loginUser: POST /users/login dispatched");
+
         return ResponseEntity.status(HttpStatus.OK).body(token);
     }
 }

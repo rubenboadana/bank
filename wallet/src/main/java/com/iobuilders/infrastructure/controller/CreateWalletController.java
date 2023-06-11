@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
+@Slf4j
 @Tag(name = "Wallets")
 public class CreateWalletController {
     private final CommandBus commandBus;
@@ -40,9 +42,14 @@ public class CreateWalletController {
                     content = @Content)})
     @PostMapping(value = "/wallets")
     public CompletableFuture<ResponseEntity<Void>> createWallet(@Valid @RequestBody Wallet wallet) throws InterruptedException {
+        log.info("CreateWalletController:createWallet: POST /wallets received");
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
         return commandBus.send(new CreateWalletCommand(wallet.getId(), currentUserName, wallet.getQuantity()))
-                .thenApply(response -> ResponseEntity.status(HttpStatus.CREATED).build());
+                .thenApply(response -> {
+                    log.info("CreateWalletController:createWallet: POST /wallets dispatched");
+                    return ResponseEntity.status(HttpStatus.CREATED).build();
+                });
     }
 }

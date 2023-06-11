@@ -23,6 +23,7 @@ public class DepositMoneyInWalletCommandHandler implements CommandHandler<Deposi
     @Override
     @org.axonframework.commandhandling.CommandHandler
     public void handle(DepositMoneyInWalletCommand command) throws InterruptedException {
+        log.info("DepositMoneyInWalletCommandHandler:handle: Command received");
         WalletTransaction transaction = WalletTransaction.builder()
                 .createdBy(command.getUser())
                 .type(TransactionTypes.DEPOSIT)
@@ -30,5 +31,6 @@ public class DepositMoneyInWalletCommandHandler implements CommandHandler<Deposi
                 .quantity(command.getQuantity())
                 .build();
         walletService.deposit(transaction);
+        log.info("DepositMoneyInWalletCommandHandler:handle: Command processed");
     }
 }

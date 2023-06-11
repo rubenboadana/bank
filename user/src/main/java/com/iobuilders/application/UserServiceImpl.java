@@ -10,12 +10,14 @@ import com.iobuilders.domain.dto.UserID;
 import com.iobuilders.domain.exceptions.InvalidCredentialsException;
 import com.iobuilders.domain.exceptions.UserAlreadyExistsException;
 import com.iobuilders.domain.exceptions.UserNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final JwtService jwtService;
@@ -32,12 +34,18 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserID create(User user) {
+        log.info("UserServiceImpl:create: Starting to create the new user " + user);
         checkUserNotAlreadyExist(user);
-        return repository.create(user);
+
+        UserID userId = repository.create(user);
+        log.info("UserServiceImpl:create: User [" + user.userName() + "] successfully created");
+
+        return userId;
     }
 
     private void checkUserNotAlreadyExist(User user) {
         repository.findByUserName(user.userName()).ifPresent(userFound -> {
+            log.error("UserServiceImpl:create: Username already exists: " + user.userName());
             throw new UserAlreadyExistsException(userFound.userName());
         });
     }
@@ -45,9 +53,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public JwtToken login(LoginRequest loginRequest) {
         User user = repository.findByUserName(loginRequest.username())
-                .orElseThrow(() -> new UserNotFoundException(loginRequest.username()));
+                .orElseThrow(() -> {
+                    log.error("UserServiceImpl:login: User not found: " + loginRequest.username());
+                    return new UserNotFoundException(loginRequest.username());
+                });
 
         if (!passwordEncoder.matches(loginRequest.password(), user.password())) {
+            log.error("UserServiceImpl:login: Credentials are invalid for the user: " + user.userName());
             throw new InvalidCredentialsException(loginRequest.username());
         }
 

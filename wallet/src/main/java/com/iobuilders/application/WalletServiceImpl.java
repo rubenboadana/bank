@@ -10,6 +10,7 @@ import com.iobuilders.domain.dto.WalletOverview;
 import com.iobuilders.domain.dto.WalletTransaction;
 import com.iobuilders.domain.exceptions.NegativeBalanceExceptionException;
 import com.iobuilders.domain.exceptions.WalletNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Slf4j
 @Transactional
 public class WalletServiceImpl implements WalletService {
     private final WalletRepository repository;
@@ -30,23 +32,28 @@ public class WalletServiceImpl implements WalletService {
         this.eventBus = eventBus;
     }
 
-    @Override
-    public synchronized void create(Wallet wallet) throws InterruptedException {
-        repository.create(wallet);
-        eventBus.publish(new WalletCreatedEvent(wallet.getOwnerUsername(), wallet.getId()));
-    }
-
     private static void checkEnoughBalance(WalletTransaction transaction, Wallet wallet) {
         if (wallet.getQuantity() - transaction.getQuantity() < 0) {
+            log.error("WalletServiceImpl:checkEnoughBalance: Balance is negative after the transaction " + transaction);
             throw new NegativeBalanceExceptionException(transaction.getOriginWalletId());
         }
     }
 
     @Override
+    public synchronized void create(Wallet wallet) throws InterruptedException {
+        log.info("WalletServiceImpl:create: Starting to create the new wallet " + wallet);
+        repository.create(wallet);
+        eventBus.publish(new WalletCreatedEvent(wallet.getOwnerUsername(), wallet.getId()));
+        log.info("WalletServiceImpl:create: Wallet [" + wallet + "] successfully created");
+    }
+
+    @Override
     public synchronized void deposit(WalletTransaction transaction) {
+        log.info("WalletServiceImpl:create: Starting to do the deposit " + transaction);
         checkWalletExist(transaction.getDestinyWalletId());
         repository.deposit(transaction);
         transactionsRepository.add(transaction);
+        log.info("WalletServiceImpl:create: Deposit [" + transaction + "] successfully created");
     }
 
     private void checkWalletExist(String walletId) {
@@ -59,12 +66,14 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public synchronized void transfer(WalletTransaction transaction) {
+        log.info("WalletServiceImpl:create: Starting to do the transfer " + transaction);
         Wallet originWallet = getIfWalletExist(transaction.getOriginWalletId());
         checkEnoughBalance(transaction, originWallet);
         checkWalletExist(transaction.getDestinyWalletId());
 
         repository.transfer(transaction);
         transactionsRepository.add(transaction);
+        log.info("WalletServiceImpl:create: Transfer [" + transaction + "] successfully created");
     }
 
     @Override

@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
+@Slf4j
 @Tag(name = "Wallets")
 public class UpdateWalletController {
 
@@ -34,7 +36,7 @@ public class UpdateWalletController {
         this.commandBus = commandBus;
     }
 
-    @Operation(summary = "Deposit money to the specified wallet")
+    @Operation(summary = "Deposit money into the specified wallet")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Wallet updated",
                     content = {@Content(mediaType = "application/json",
@@ -47,10 +49,15 @@ public class UpdateWalletController {
                     content = @Content)})
     @PutMapping(value = "/wallets/{id}")
     public CompletableFuture<ResponseEntity<Void>> updateWallet(@PathVariable(value = "id") String walletId, @Valid @RequestBody Quantity quantity) throws InterruptedException {
+        log.info("UpdateWalletController:updateWallet: PUT /wallets" + walletId + " received");
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
 
         return commandBus.send(new DepositMoneyInWalletCommand(walletId, currentUserName, quantity.getValue()))
-                .thenApply(response -> ResponseEntity.status(HttpStatus.OK).build());
+                .thenApply(response -> {
+                    log.info("UpdateWalletController:updateWallet: PUT /wallets" + walletId + " dispatched");
+                    return ResponseEntity.status(HttpStatus.OK).build();
+                });
     }
 }

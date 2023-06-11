@@ -24,7 +24,9 @@ public class CreateWalletCommandHandler implements CommandHandler<CreateWalletCo
     @Override
     @org.axonframework.commandhandling.CommandHandler
     public void handle(CreateWalletCommand command) throws InterruptedException {
+        log.info("CreateWalletCommandHandler:handle: Command received");
         Wallet wallet = new Wallet(command.getId(), new WalletOwner(command.getOwner()), new Quantity(command.getQuantity()));
         walletService.create(wallet);
+        log.info("CreateWalletCommandHandler:handle: Command processed");
     }
 }

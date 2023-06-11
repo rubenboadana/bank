@@ -3,12 +3,14 @@ package com.iobuilders.infrastructure.persistence;
 import com.iobuilders.domain.UserRepository;
 import com.iobuilders.domain.dto.User;
 import com.iobuilders.domain.dto.UserID;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
+@Transactional
 public class UserRepositoryImpl implements UserRepository {
 
 

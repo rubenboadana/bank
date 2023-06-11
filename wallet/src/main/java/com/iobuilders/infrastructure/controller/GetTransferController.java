@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.ExecutionException;
 
 @RestController
+@Slf4j
 @Tag(name = "Wallets")
 public class GetTransferController {
 
@@ -41,8 +43,10 @@ public class GetTransferController {
             @ApiResponse(responseCode = "500", description = "Wallet update failure",
                     content = @Content)})
     @GetMapping(value = "/wallets/{id}/transactions")
-    public ResponseEntity<WalletOverview> getTransactions(@PathVariable(value = "id") String originWalletId) throws InterruptedException, ExecutionException {
-        WalletOverview overview = (WalletOverview) queryBus.get(new FindWalletTransactionsQuery(originWalletId));
+    public ResponseEntity<WalletOverview> getTransactions(@PathVariable(value = "id") String walletId) throws InterruptedException, ExecutionException {
+        log.info("GetTransferController:getTransactions: GET /wallets" + walletId + "/transactions received");
+        WalletOverview overview = (WalletOverview) queryBus.get(new FindWalletTransactionsQuery(walletId));
+        log.info("GetTransferController:getTransactions: GET /wallets" + walletId + "/transactions dispatched");
 
         return ResponseEntity.status(HttpStatus.OK).body(overview);
     }
