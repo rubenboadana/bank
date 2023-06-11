@@ -5,7 +5,7 @@ import com.iobuilders.domain.dto.WalletTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +38,7 @@ public class WalletTransactionRepositoryImpl implements WalletTransactionReposit
                 .originWalletId(transaction.getOriginWalletId())
                 .destinyWalletId(transaction.getDestinyWalletId())
                 .quantity(transaction.getQuantity())
-                .createdAt(LocalDateTime.now())
+                .createdAt(Instant.now())
                 .build();
     }
 

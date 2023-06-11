@@ -57,7 +57,7 @@ public class CreateTransferController {
         return commandBus.send(new TransferMoneyCommand(currentUserName, originWalletId, transaction.getDestinyWalletId(), TransactionTypes.TRANSFERENCE, transaction.getQuantity()))
                 .thenApply(response -> {
                     log.info("CreateTransferController:doMoneyTransaction: POST /wallets" + originWalletId + "/transactions dispatched");
-                    return ResponseEntity.status(HttpStatus.OK).build();
+                    return ResponseEntity.status(HttpStatus.CREATED).build();
                 });
     }
 }

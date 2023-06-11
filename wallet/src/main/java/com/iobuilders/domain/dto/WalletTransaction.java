@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iobuilders.domain.enums.TransactionTypes;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @AllArgsConstructor
 @Builder
@@ -22,6 +22,6 @@ public class WalletTransaction {
     private TransactionTypes type;
     private double quantity;
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private LocalDateTime at;
+    private Instant at;
 
 }
