@@ -1,10 +1,10 @@
 package com.iobuilders.infrastructure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.iobuilders.domain.UserObjectMother;
 import com.iobuilders.domain.bus.command.CommandBus;
 import com.iobuilders.domain.command.CreateUserCommand;
 import com.iobuilders.domain.dto.User;
+import com.iobuilders.domain.dto.UserObjectMother;
 import com.iobuilders.infrastructure.controller.CreateUserController;
 import org.axonframework.commandhandling.CommandExecutionException;
 import org.junit.jupiter.api.Test;

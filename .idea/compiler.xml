@@ -10,12 +10,13 @@
         <module name="bank-utils" />
         <module name="wallet-spring-boot-starter" />
         <module name="user-spring-boot-starter" />
-        <module name="e2e-steps" />
         <module name="bank-application" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="common" target="17" />
       <module name="common-spring-boot-starter" target="17" />
+      <module name="e2e-steps" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

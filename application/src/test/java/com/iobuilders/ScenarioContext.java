@@ -10,4 +10,5 @@ import org.springframework.stereotype.Component;
 @Data
 public class ScenarioContext {
     private ResponseEntity<String> response;
+    private String token;
 }

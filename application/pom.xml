@@ -14,10 +14,6 @@
     <version>1.0-SNAPSHOT</version>
     <name>bank</name>
 
-    <properties>
-        <code.coverage.overall.data.folder>${basedir}/../target/site/jacoco/</code.coverage.overall.data.folder>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.iobuilders</groupId>
@@ -28,6 +24,11 @@
             <groupId>com.iobuilders</groupId>
             <artifactId>wallet-spring-boot-starter</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -63,19 +64,19 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
                 <executions>
                     <execution>
-                        <id>report-aggregate</id>
-                        <phase>verify</phase>
                         <goals>
-                            <goal>report-aggregate</goal>
+                            <goal>prepare-agent</goal>
                         </goals>
-                        <configuration>
-                            <outputDirectory>${code.coverage.overall.data.folder}</outputDirectory>
-                            <excludes>
-                                <exclude>**/Application.*</exclude>
-                            </excludes>
-                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

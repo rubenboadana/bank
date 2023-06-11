@@ -47,6 +47,20 @@ public class HttpClient {
         }
     }
 
+    public <T> ResponseEntity<String> doAuthenticatedRequest(HttpRequest<T> httpRequest, String token) {
+        try {
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+            URL url = new URL(PROTOCOL, HOST, port, httpRequest.getPath());
+            HttpHeaders httpHeaders = getHeaders();
+            httpHeaders.setBearerAuth(token);
+            final HttpEntity httpEntity = new HttpEntity<>(httpRequest.getBody(), httpHeaders);
+            final HttpMethod httpMethod = Optional.ofNullable(HttpMethod.resolve(httpRequest.getMethod())).orElseThrow(IllegalArgumentException::new);
+            return getResponseEntityFor(url, httpEntity, httpMethod);
+        } catch (IOException exception) {
+            throw new RestClientException(exception.getMessage(), exception);
+        }
+    }
+
     private HttpHeaders getHeaders() {
         final HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);

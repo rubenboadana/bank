@@ -2,8 +2,8 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/application/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/common/bank-utils/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/common/bank-utils/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bank-utils/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/bank-utils/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/e2e-steps/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/e2e-steps/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/common/src/main/java" charset="UTF-8" />

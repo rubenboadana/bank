@@ -1,7 +1,6 @@
 package com.iobuilders.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @AllArgsConstructor
@@ -9,9 +8,9 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
+@ToString
 public class Wallet {
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String id;
 
     @JsonIgnore

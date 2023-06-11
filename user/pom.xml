@@ -17,14 +17,6 @@
     <dependencies>
         <dependency>
             <groupId>com.iobuilders</groupId>
-            <artifactId>e2e-steps</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.iobuilders</groupId>
             <artifactId>bank-utils</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>

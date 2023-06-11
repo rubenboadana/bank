@@ -1,9 +1,9 @@
 package com.iobuilders.application;
 
-import com.iobuilders.domain.UserObjectMother;
 import com.iobuilders.domain.UserRepository;
 import com.iobuilders.domain.dto.User;
 import com.iobuilders.domain.dto.UserID;
+import com.iobuilders.domain.dto.UserObjectMother;
 import com.iobuilders.domain.exceptions.UserAlreadyExistsException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
