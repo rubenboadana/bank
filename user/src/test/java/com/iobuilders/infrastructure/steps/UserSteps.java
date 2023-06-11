@@ -40,9 +40,10 @@ public class UserSteps {
         context.setResponse(response);
     }
 
-    @When("^valid user credentials are sent$")
-    public void userLoginIsRequested() {
-        ResponseEntity<String> response = doLoginRequest();
+    @When("^(valid|invalid) user credentials are sent$")
+    public void userLoginIsRequested(String requestType) {
+        String password = VALID_USER.equals(requestType) ? UserObjectMother.DEFAULT_PASSWORD : UserObjectMother.INCORRECT_PASSWORD;
+        ResponseEntity<String> response = doLoginRequest(password);
         context.setResponse(response);
     }
 
@@ -68,8 +69,8 @@ public class UserSteps {
         return httpClient.doRequest(httpRequest);
     }
 
-    private ResponseEntity<String> doLoginRequest() {
-        LoginRequest request = LoginRequestObjectMother.basic();
+    private ResponseEntity<String> doLoginRequest(String password) {
+        LoginRequest request = LoginRequestObjectMother.withPassword(password);
 
         final HttpRequest<LoginRequest> httpRequest = HttpClient.createHttpRequest(HttpMethod.POST, "/users/login", request);
         return httpClient.doRequest(httpRequest);

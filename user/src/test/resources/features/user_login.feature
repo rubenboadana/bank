@@ -9,10 +9,19 @@ Feature: User login use cases
       {"token":"eyJhbGciOiJIUzI1NiJ9
       """
 
-  Scenario: Login a user with unexisting values
+  Scenario: Login unexisting user
     When valid user credentials are sent
     Then response code is "404"
     And response body is:
       """
       {"message":"Could not find the requested resource: User with id rubenboada"}
+      """
+
+  Scenario: Login a user with invalid credentials
+    Given a valid user is available
+    When invalid user credentials are sent
+    Then response code is "401"
+    And response body is:
+      """
+      {"message":"Invalid credentials provided for the user rubenboada"}
       """

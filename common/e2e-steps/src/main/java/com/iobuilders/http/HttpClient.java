@@ -4,6 +4,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
@@ -36,6 +37,7 @@ public class HttpClient {
 
     public <T> ResponseEntity<String> doRequest(HttpRequest<T> httpRequest) {
         try {
+            restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
             URL url = new URL(PROTOCOL, HOST, port, httpRequest.getPath());
             final HttpEntity httpEntity = new HttpEntity<>(httpRequest.getBody(), getHeaders());
             final HttpMethod httpMethod = Optional.ofNullable(HttpMethod.resolve(httpRequest.getMethod())).orElseThrow(IllegalArgumentException::new);

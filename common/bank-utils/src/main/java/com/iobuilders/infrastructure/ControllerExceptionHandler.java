@@ -57,7 +57,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity handlevALIDATIONException(MethodArgumentNotValidException ex) {
+    public ResponseEntity handleValidationException(MethodArgumentNotValidException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
     }
