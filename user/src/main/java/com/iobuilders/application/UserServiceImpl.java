@@ -6,7 +6,6 @@ import com.iobuilders.domain.UserService;
 import com.iobuilders.domain.dto.JwtToken;
 import com.iobuilders.domain.dto.LoginRequest;
 import com.iobuilders.domain.dto.User;
-import com.iobuilders.domain.dto.UserID;
 import com.iobuilders.domain.exceptions.InvalidCredentialsException;
 import com.iobuilders.domain.exceptions.UserAlreadyExistsException;
 import com.iobuilders.domain.exceptions.UserNotFoundException;
@@ -33,14 +32,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserID create(User user) {
+    public void create(User user) {
         log.info("UserServiceImpl:create: Starting to create the new user " + user);
         checkUserNotAlreadyExist(user);
 
-        UserID userId = repository.create(user);
+        repository.create(user);
         log.info("UserServiceImpl:create: User [" + user.userName() + "] successfully created");
 
-        return userId;
     }
 
     private void checkUserNotAlreadyExist(User user) {

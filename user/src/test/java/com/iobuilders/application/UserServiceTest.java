@@ -2,7 +2,6 @@ package com.iobuilders.application;
 
 import com.iobuilders.domain.UserRepository;
 import com.iobuilders.domain.dto.User;
-import com.iobuilders.domain.dto.UserID;
 import com.iobuilders.domain.dto.UserObjectMother;
 import com.iobuilders.domain.exceptions.UserAlreadyExistsException;
 import org.junit.jupiter.api.Test;
@@ -13,9 +12,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 final class UserServiceTest {
@@ -30,14 +28,12 @@ final class UserServiceTest {
     void should_returnUserId_when_createSucceed() {
         //Given
         User user = UserObjectMother.basic();
-        UserID expectedId = new UserID(USER_ID);
-        doReturn(expectedId).when(userRepositoryMock).create(user);
 
         //When
-        UserID newId = sut.create(user);
+        sut.create(user);
 
         //Then
-        assertThat(newId).isEqualTo(expectedId);
+        verify(userRepositoryMock, times(1)).create(user);
     }
 
     @Test

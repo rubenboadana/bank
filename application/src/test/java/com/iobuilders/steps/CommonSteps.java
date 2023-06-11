@@ -14,6 +14,12 @@ import io.cucumber.java.en.When;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
+import org.json.JSONException;
+import org.skyscreamer.jsonassert.Customization;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.skyscreamer.jsonassert.RegularExpressionValueMatcher;
+import org.skyscreamer.jsonassert.comparator.CustomComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,10 +74,20 @@ public class CommonSteps {
     }
 
     @Then("^response body is like:$")
-    public void checkSimilarResponseBody(String expectedBody) {
+    public void checkSimilarResponseBody(String expectedBody) throws JSONException {
         ResponseEntity<String> response = context.getResponse();
         assertThat(response.getBody()).startsWith(expectedBody);
     }
+
+    @Then("^response json is like:$")
+    public void checkSimilarResponseJson(String expectedBody) throws JSONException {
+        ResponseEntity<String> response = context.getResponse();
+        JSONAssert.assertEquals(response.getBody(), expectedBody,
+                new CustomComparator(JSONCompareMode.STRICT,
+                        new Customization("*.at",
+                                new RegularExpressionValueMatcher<Object>("x"))));
+    }
+
 
     @When("^valid user credentials are sent$")
     public void userLoginIsRequested() throws ParseException {
