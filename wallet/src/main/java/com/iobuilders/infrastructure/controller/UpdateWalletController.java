@@ -41,22 +41,22 @@ public class UpdateWalletController {
             @ApiResponse(responseCode = "200", description = "Wallet updated",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = Wallet.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid wallet information supplied",
+            @ApiResponse(responseCode = "400", description = "Invalid deposit value",
                     content = @Content),
-            @ApiResponse(responseCode = "404", description = "Wallet not found",
+            @ApiResponse(responseCode = "403", description = "Credentials not provided",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Wallet update failure",
                     content = @Content)})
     @PutMapping(value = "/wallets/{id}")
     public CompletableFuture<ResponseEntity<Void>> updateWallet(@PathVariable(value = "id") String walletId, @Valid @RequestBody Quantity quantity) throws InterruptedException {
-        log.info("UpdateWalletController:updateWallet: PUT /wallets" + walletId + " received");
+        log.info("UpdateWalletController:updateWallet: PUT /wallets/" + walletId + " received");
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUserName = authentication.getName();
 
         return commandBus.send(new DepositMoneyInWalletCommand(walletId, currentUserName, quantity.getValue()))
                 .thenApply(response -> {
-                    log.info("UpdateWalletController:updateWallet: PUT /wallets" + walletId + " dispatched");
+                    log.info("UpdateWalletController:updateWallet: PUT /wallets/" + walletId + " dispatched");
                     return ResponseEntity.status(HttpStatus.OK).build();
                 });
     }

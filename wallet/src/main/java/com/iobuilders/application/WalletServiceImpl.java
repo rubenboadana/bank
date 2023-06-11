@@ -49,11 +49,11 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public synchronized void deposit(WalletTransaction transaction) {
-        log.info("WalletServiceImpl:create: Starting to do the deposit " + transaction);
+        log.info("WalletServiceImpl:deposit: Starting to do the deposit " + transaction);
         checkWalletExist(transaction.getDestinyWalletId());
         repository.deposit(transaction);
         transactionsRepository.add(transaction);
-        log.info("WalletServiceImpl:create: Deposit [" + transaction + "] successfully created");
+        log.info("WalletServiceImpl:deposit: Deposit [" + transaction + "] successfully created");
     }
 
     private void checkWalletExist(String walletId) {
@@ -66,14 +66,14 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public synchronized void transfer(WalletTransaction transaction) {
-        log.info("WalletServiceImpl:create: Starting to do the transfer " + transaction);
+        log.info("WalletServiceImpl:transfer: Starting to do the transfer " + transaction);
         Wallet originWallet = getIfWalletExist(transaction.getOriginWalletId());
         checkEnoughBalance(transaction, originWallet);
         checkWalletExist(transaction.getDestinyWalletId());
 
         repository.transfer(transaction);
         transactionsRepository.add(transaction);
-        log.info("WalletServiceImpl:create: Transfer [" + transaction + "] successfully created");
+        log.info("WalletServiceImpl:transfer: Transfer [" + transaction + "] successfully created");
     }
 
     @Override

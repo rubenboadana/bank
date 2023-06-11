@@ -38,6 +38,8 @@ public class CreateWalletController {
                     content = @Content),
             @ApiResponse(responseCode = "400", description = "Invalid wallet information supplied",
                     content = @Content),
+            @ApiResponse(responseCode = "403", description = "Credentials not provided",
+                    content = @Content),
             @ApiResponse(responseCode = "500", description = "Wallet creation failure",
                     content = @Content)})
     @PostMapping(value = "/wallets")

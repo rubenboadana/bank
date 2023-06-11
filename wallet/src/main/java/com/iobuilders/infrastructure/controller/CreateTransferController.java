@@ -44,7 +44,7 @@ public class CreateTransferController {
                             schema = @Schema(implementation = Wallet.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid wallet information supplied",
                     content = @Content),
-            @ApiResponse(responseCode = "404", description = "Wallet not found",
+            @ApiResponse(responseCode = "403", description = "Credentials not provided",
                     content = @Content),
             @ApiResponse(responseCode = "500", description = "Wallet update failure",
                     content = @Content)})

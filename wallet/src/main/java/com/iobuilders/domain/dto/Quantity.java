@@ -1,6 +1,7 @@
 package com.iobuilders.domain.dto;
 
 import com.iobuilders.domain.exceptions.QuantityNotValidException;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 @NoArgsConstructor
@@ -10,6 +11,7 @@ import lombok.*;
 @EqualsAndHashCode
 public class Quantity {
 
+    @Positive
     private double value;
 
     public Quantity(double value) {

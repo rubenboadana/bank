@@ -7,21 +7,18 @@ import com.iobuilders.domain.exceptions.ResourceConflictException;
 import com.iobuilders.domain.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandExecutionException;
-import org.axonframework.queryhandling.QueryExecutionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.concurrent.ExecutionException;
 
 @Slf4j
 @RestControllerAdvice
 public class ControllerExceptionHandler {
 
-    @ExceptionHandler(value = {Exception.class})
-    public ResponseEntity unknownException(Exception ex) {
-        log.error(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(ex.getMessage()));
-    }
 
     @ExceptionHandler(value = {CommandExecutionException.class})
     public ResponseEntity commmandExecutionException(CommandExecutionException ex) {
@@ -29,10 +26,10 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
     }
 
-    @ExceptionHandler(value = {QueryExecutionException.class})
-    public ResponseEntity queryExecutionException(QueryExecutionException ex) {
+    @ExceptionHandler(value = ExecutionException.class)
+    public ResponseEntity queryExecutionException(ExecutionException ex) {
         log.error(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(ex.getCause().getMessage()));
     }
 
     @ExceptionHandler(BadRequestException.class)
@@ -59,4 +56,15 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponse(ex.getMessage()));
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity handlevALIDATIONException(MethodArgumentNotValidException ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(value = {Exception.class})
+    public ResponseEntity unknownException(Exception ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse(ex.getMessage()));
+    }
 }

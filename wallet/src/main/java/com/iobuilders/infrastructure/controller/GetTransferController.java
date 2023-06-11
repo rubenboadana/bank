@@ -36,17 +36,17 @@ public class GetTransferController {
             @ApiResponse(responseCode = "200", description = "Wallet found",
                     content = {@Content(mediaType = "application/json",
                             schema = @Schema(implementation = WalletOverview.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid wallet information supplied",
+            @ApiResponse(responseCode = "403", description = "Credentials not provided",
                     content = @Content),
             @ApiResponse(responseCode = "404", description = "Wallet not found",
                     content = @Content),
-            @ApiResponse(responseCode = "500", description = "Wallet update failure",
+            @ApiResponse(responseCode = "500", description = "Internal error",
                     content = @Content)})
     @GetMapping(value = "/wallets/{id}/transactions")
     public ResponseEntity<WalletOverview> getTransactions(@PathVariable(value = "id") String walletId) throws InterruptedException, ExecutionException {
-        log.info("GetTransferController:getTransactions: GET /wallets" + walletId + "/transactions received");
+        log.info("GetTransferController:getTransactions: GET /wallets/" + walletId + "/transactions received");
         WalletOverview overview = (WalletOverview) queryBus.get(new FindWalletTransactionsQuery(walletId));
-        log.info("GetTransferController:getTransactions: GET /wallets" + walletId + "/transactions dispatched");
+        log.info("GetTransferController:getTransactions: GET /wallets/" + walletId + "/transactions dispatched");
 
         return ResponseEntity.status(HttpStatus.OK).body(overview);
     }
