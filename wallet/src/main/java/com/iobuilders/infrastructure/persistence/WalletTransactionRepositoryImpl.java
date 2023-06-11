@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class WalletTransactionRepositoryImpl implements WalletTransactionRepository {
@@ -23,6 +25,12 @@ public class WalletTransactionRepositoryImpl implements WalletTransactionReposit
         walletTransactionJPARepository.save(entity);
     }
 
+    @Override
+    public List<WalletTransaction> findTransactionsByWalletId(String walletId) {
+        return walletTransactionJPARepository.findByOriginWalletIdOrDestinyWalletIdOrderByCreatedAtDesc(walletId, walletId)
+                .stream().map(this::getDTOFrom).collect(Collectors.toList());
+    }
+
     private WalletTransactionEntity getEntityFrom(WalletTransaction transaction) {
         return WalletTransactionEntity.builder()
                 .createdBy(transaction.getCreatedBy())
@@ -34,5 +42,15 @@ public class WalletTransactionRepositoryImpl implements WalletTransactionReposit
                 .build();
     }
 
+    private WalletTransaction getDTOFrom(WalletTransactionEntity entity) {
+        return WalletTransaction.builder()
+                .createdBy(entity.getCreatedBy())
+                .type(entity.getType())
+                .originWalletId(entity.getOriginWalletId())
+                .destinyWalletId(entity.getDestinyWalletId())
+                .quantity(entity.getQuantity())
+                .at(entity.getCreatedAt())
+                .build();
+    }
 
 }

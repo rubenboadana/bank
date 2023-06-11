@@ -6,12 +6,15 @@ import com.iobuilders.domain.WalletTransactionRepository;
 import com.iobuilders.domain.bus.event.EventBus;
 import com.iobuilders.domain.bus.event.WalletCreatedEvent;
 import com.iobuilders.domain.dto.Wallet;
+import com.iobuilders.domain.dto.WalletOverview;
 import com.iobuilders.domain.dto.WalletTransaction;
 import com.iobuilders.domain.exceptions.NegativeBalanceExceptionException;
 import com.iobuilders.domain.exceptions.WalletNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -62,6 +65,17 @@ public class WalletServiceImpl implements WalletService {
 
         repository.transfer(transaction);
         transactionsRepository.add(transaction);
+    }
+
+    @Override
+    public WalletOverview findTransactionsByWalletId(String walletId) {
+        Wallet wallet = getIfWalletExist(walletId);
+        List<WalletTransaction> transactions = transactionsRepository.findTransactionsByWalletId(walletId);
+
+        return WalletOverview.builder()
+                .quantity(wallet.getQuantity())
+                .transactions(transactions)
+                .build();
     }
 
 }

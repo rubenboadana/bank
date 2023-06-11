@@ -1,6 +1,7 @@
 package com.iobuilders.domain;
 
 import com.iobuilders.domain.dto.Wallet;
+import com.iobuilders.domain.dto.WalletOverview;
 import com.iobuilders.domain.dto.WalletTransaction;
 
 public interface WalletService {
@@ -11,4 +12,5 @@ public interface WalletService {
 
     void transfer(WalletTransaction transaction);
 
+    WalletOverview findTransactionsByWalletId(String walletId);
 }

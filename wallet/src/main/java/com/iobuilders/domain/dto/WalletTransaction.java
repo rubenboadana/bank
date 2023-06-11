@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @Builder
 @Getter
@@ -17,8 +19,8 @@ public class WalletTransaction {
     @JsonIgnore
     private String originWalletId;
     private String destinyWalletId;
-    @JsonIgnore
     private TransactionTypes type;
     private double quantity;
+    private LocalDateTime at;
 
 }

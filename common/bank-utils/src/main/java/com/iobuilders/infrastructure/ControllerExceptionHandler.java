@@ -7,6 +7,7 @@ import com.iobuilders.domain.exceptions.ResourceConflictException;
 import com.iobuilders.domain.exceptions.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandExecutionException;
+import org.axonframework.queryhandling.QueryExecutionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,6 +25,12 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(value = {CommandExecutionException.class})
     public ResponseEntity commmandExecutionException(CommandExecutionException ex) {
+        log.error(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(value = {QueryExecutionException.class})
+    public ResponseEntity queryExecutionException(QueryExecutionException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(ex.getMessage()));
     }
