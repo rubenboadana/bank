@@ -32,8 +32,10 @@
 # 👩‍💻🧾 How To Start
 
 1. Build the application: `mvn clean install`
-2. Start up Docker compose: `docker-compose up`
-    1. **IntelliJ**: Choose the Run Configuration "Docker compose up" and click the ▶️ icon
+2. Start up Docker compose: \
+   `cd application` \
+   `docker-compose up` \
+   **IntelliJ**: Choose the Run Configuration "Docker compose up" and click the ▶️ icon
 3. Go to browser and check the REST api documentation: http://localhost:8000/swagger-ui/index.html
 4. Track the commands, queries and events that are being sent across the system: http://localhost:8024/
 

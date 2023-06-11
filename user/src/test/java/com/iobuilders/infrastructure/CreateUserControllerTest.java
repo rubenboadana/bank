@@ -43,9 +43,9 @@ class CreateUserControllerTest {
     void should_responseBadRequestError_when_CommandHandlerFailureIsProduced() throws Exception {
         //Given
         doThrow(new CommandExecutionException("Command handler thrown an exception", new RuntimeException())).when(commandBusMock).send(any(CreateUserCommand.class));
+        User user = UserObjectMother.basic();
 
         //When/Then
-        User user = UserObjectMother.basic();
         mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(user)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
