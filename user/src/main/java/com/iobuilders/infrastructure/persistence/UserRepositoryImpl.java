@@ -30,12 +30,6 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<RegisterRequest> findByUserNameAndPassword(String userName, String password) {
-        Optional<UserEntity> userEntity = userJPARepository.findByUserNameAndPassword(userName, password);
-        return getDTOFrom(userEntity);
-    }
-
-    @Override
     public Optional<RegisterRequest> findByUserName(String userName) {
         Optional<UserEntity> userEntity = userJPARepository.findByUserName(userName);
         return getDTOFrom(userEntity);

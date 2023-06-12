@@ -9,8 +9,6 @@ public interface UserRepository {
 
     UserID create(RegisterRequest registerRequest);
 
-    Optional<RegisterRequest> findByUserNameAndPassword(String userName, String password);
-
     Optional<RegisterRequest> findByUserName(String userName);
 
     void bindWallet(RegisterRequest registerRequest, String walletId);
