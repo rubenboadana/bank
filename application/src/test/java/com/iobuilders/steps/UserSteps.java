@@ -34,6 +34,8 @@ public class UserSteps {
     public static final String TRANSFERENCE_CREATED_AT_PATH = "*.at";
     public static final String TOKEN = "token";
     public static final String EMPTY_TOKEN = "";
+    public static final String NORMAL_TYPE = "normal";
+    public static final String EXTERNAL_TYPE = "external";
     @Autowired
     private HttpClient httpClient;
     @Autowired
@@ -41,13 +43,20 @@ public class UserSteps {
 
     @Given("a valid user is available")
     public void userIsAlreadyCreated() {
-        ResponseEntity<String> response = doCreateRequest();
+        ResponseEntity<String> response = doCreateRequest(NORMAL_TYPE);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+
+    @Given("a second valid user is available")
+    public void externalUserIsAlreadyCreated() {
+        ResponseEntity<String> response = doCreateRequest(EXTERNAL_TYPE);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
     }
 
     @When("^valid user creation request is sent$")
     public void userCreationIsRequested() {
-        ResponseEntity<String> response = doCreateRequest();
+        ResponseEntity<String> response = doCreateRequest(NORMAL_TYPE);
         context.setResponse(response);
     }
 
@@ -81,26 +90,32 @@ public class UserSteps {
 
     @When("^valid user credentials are sent$")
     public void userLoginIsRequested() throws ParseException {
-        ResponseEntity<String> response = doLoginRequest(DEFAULT_PASSWORD);
+        ResponseEntity<String> response = doLoginRequest(RegisterRequestObjectMother.DEFAULT_USERNAME, DEFAULT_PASSWORD);
+        context.setResponse(response);
+        context.setToken(parseToken(response.getBody()));
+    }
+
+    @When("^second valid user credentials are sent$")
+    public void externalUserLoginIsRequested() throws ParseException {
+        ResponseEntity<String> response = doLoginRequest(RegisterRequestObjectMother.ALIEN_USERNAME, DEFAULT_PASSWORD);
         context.setResponse(response);
         context.setToken(parseToken(response.getBody()));
     }
 
     @When("^invalid user credentials are sent$")
     public void userInvalidLoginIsRequested() {
-        ResponseEntity<String> response = doLoginRequest(INCORRECT_PASSWORD);
+        ResponseEntity<String> response = doLoginRequest(RegisterRequestObjectMother.DEFAULT_USERNAME, INCORRECT_PASSWORD);
         context.setResponse(response);
     }
 
-    private ResponseEntity<String> doCreateRequest() {
-        RegisterRequest registerRequest = RegisterRequestObjectMother.basic();
+    private ResponseEntity<String> doCreateRequest(String userType) {
+        RegisterRequest registerRequest = EXTERNAL_TYPE.equals(userType) ? RegisterRequestObjectMother.external() : RegisterRequestObjectMother.basic();
         final HttpRequest<RegisterRequest> httpRequest = HttpClient.createHttpRequest(HttpMethod.POST, "/users/register", registerRequest);
         return httpClient.doRequest(httpRequest);
-
     }
 
-    private ResponseEntity<String> doLoginRequest(String password) {
-        LoginRequest request = LoginRequestObjectMother.withPassword(password);
+    private ResponseEntity<String> doLoginRequest(String username, String password) {
+        LoginRequest request = LoginRequestObjectMother.withUsernameAndPassword(username, password);
         final HttpRequest<LoginRequest> httpRequest = HttpClient.createHttpRequest(HttpMethod.POST, "/users/login", request);
         return httpClient.doRequest(httpRequest);
     }

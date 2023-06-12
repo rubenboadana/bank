@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ExecutionException;
+
 @Slf4j
 @Service
 public class TransferMoneyCommandHandler implements CommandHandler<TransferMoneyCommand> {
@@ -21,7 +23,7 @@ public class TransferMoneyCommandHandler implements CommandHandler<TransferMoney
 
     @Override
     @org.axonframework.commandhandling.CommandHandler
-    public void handle(TransferMoneyCommand command) throws InterruptedException {
+    public void handle(TransferMoneyCommand command) throws InterruptedException, ExecutionException {
         log.info("TransferMoneyCommandHandler:handle: Command received");
         WalletTransaction transaction = WalletTransaction.builder()
                 .createdBy(command.getCreatedBy())

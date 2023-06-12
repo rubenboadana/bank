@@ -36,6 +36,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Optional<RegisterRequest> findByWalletId(String walletId) {
+        Optional<UserEntity> userEntity = userJPARepository.findByWalletId(walletId);
+        return getDTOFrom(userEntity);
+    }
+
+    @Override
     public void bindWallet(RegisterRequest registerRequest, String walletId) {
         UserEntity entity = getEntityFrom(registerRequest);
         entity.setWalletId(walletId);

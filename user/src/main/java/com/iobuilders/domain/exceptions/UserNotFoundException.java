@@ -6,4 +6,5 @@ public class UserNotFoundException extends ResourceNotFoundException {
     public UserNotFoundException(String username) {
         super(BASE_TEXT + username);
     }
+
 }

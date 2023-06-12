@@ -11,5 +11,7 @@ public interface UserRepository {
 
     Optional<RegisterRequest> findByUserName(String userName);
 
+    Optional<RegisterRequest> findByWalletId(String walletId);
+
     void bindWallet(RegisterRequest registerRequest, String walletId);
 }

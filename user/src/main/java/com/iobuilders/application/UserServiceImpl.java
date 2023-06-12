@@ -6,9 +6,11 @@ import com.iobuilders.domain.UserService;
 import com.iobuilders.domain.dto.JwtToken;
 import com.iobuilders.domain.dto.LoginRequest;
 import com.iobuilders.domain.dto.RegisterRequest;
+import com.iobuilders.domain.dto.WalletOwnerUsername;
 import com.iobuilders.domain.exceptions.InvalidCredentialsException;
 import com.iobuilders.domain.exceptions.UserAlreadyExistsException;
 import com.iobuilders.domain.exceptions.UserNotFoundException;
+import com.iobuilders.domain.exceptions.WalletNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -66,8 +68,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void bindWallet(String userName, String walletId) {
+        log.info("UserServiceImpl:bindWallet: Starting to bind the wallet [" + walletId + "] to the user [" + userName + "]");
         RegisterRequest registerRequest = repository.findByUserName(userName).orElseThrow(() -> new UserNotFoundException(userName));
         repository.bindWallet(registerRequest, walletId);
+        log.info("UserServiceImpl:bindWallet: The wallet [" + walletId + "] was successfully bind to the user [" + userName + "]");
+    }
+
+    @Override
+    public WalletOwnerUsername findByWalletId(String walletId) {
+        RegisterRequest registerRequest = repository.findByWalletId(walletId).orElseThrow(() -> new WalletNotFoundException(walletId));
+        return new WalletOwnerUsername(registerRequest.userName());
     }
 
 

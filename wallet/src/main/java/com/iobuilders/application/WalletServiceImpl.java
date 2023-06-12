@@ -5,9 +5,13 @@ import com.iobuilders.domain.WalletService;
 import com.iobuilders.domain.WalletTransactionRepository;
 import com.iobuilders.domain.bus.event.EventBus;
 import com.iobuilders.domain.bus.event.WalletCreatedEvent;
+import com.iobuilders.domain.bus.query.FindWalletOwnerQuery;
+import com.iobuilders.domain.bus.query.QueryBus;
 import com.iobuilders.domain.dto.Wallet;
 import com.iobuilders.domain.dto.WalletOverview;
+import com.iobuilders.domain.dto.WalletOwnerUsername;
 import com.iobuilders.domain.dto.WalletTransaction;
+import com.iobuilders.domain.exceptions.InvalidCredentialsException;
 import com.iobuilders.domain.exceptions.NegativeBalanceExceptionException;
 import com.iobuilders.domain.exceptions.WalletNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @Service
 @Slf4j
@@ -24,12 +29,14 @@ public class WalletServiceImpl implements WalletService {
     private final WalletRepository repository;
     private final WalletTransactionRepository transactionsRepository;
     private final EventBus eventBus;
+    private final QueryBus queryBus;
 
     @Autowired
-    public WalletServiceImpl(WalletRepository repository, WalletTransactionRepository transactionsRepository, EventBus eventBus) {
+    public WalletServiceImpl(WalletRepository repository, WalletTransactionRepository transactionsRepository, EventBus eventBus, QueryBus queryBus) {
         this.repository = repository;
         this.transactionsRepository = transactionsRepository;
         this.eventBus = eventBus;
+        this.queryBus = queryBus;
     }
 
     private static void checkEnoughBalance(WalletTransaction transaction, Wallet wallet) {
@@ -65,8 +72,9 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public synchronized void transfer(WalletTransaction transaction) {
+    public synchronized void transfer(WalletTransaction transaction) throws ExecutionException, InterruptedException {
         log.info("WalletServiceImpl:transfer: Starting to do the transfer " + transaction);
+        checkOriginWalletOwner(transaction);
         Wallet originWallet = getIfWalletExist(transaction.getOriginWalletId());
         checkEnoughBalance(transaction, originWallet);
         checkWalletExist(transaction.getDestinyWalletId());
@@ -74,6 +82,15 @@ public class WalletServiceImpl implements WalletService {
         repository.transfer(transaction);
         transactionsRepository.add(transaction);
         log.info("WalletServiceImpl:transfer: Transfer [" + transaction + "] successfully created");
+    }
+
+    private void checkOriginWalletOwner(WalletTransaction transaction) throws ExecutionException, InterruptedException {
+        WalletOwnerUsername username = (WalletOwnerUsername) this.queryBus.get(new FindWalletOwnerQuery(transaction.getOriginWalletId()));
+
+        if (!username.getValue().equals(transaction.getCreatedBy())) {
+            throw new InvalidCredentialsException(transaction.getCreatedBy());
+        }
+
     }
 
     @Override

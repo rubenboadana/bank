@@ -6,9 +6,13 @@ import com.iobuilders.domain.WalletTransactionObjectMother;
 import com.iobuilders.domain.WalletTransactionRepository;
 import com.iobuilders.domain.bus.event.EventBus;
 import com.iobuilders.domain.bus.event.WalletCreatedEvent;
+import com.iobuilders.domain.bus.query.FindWalletOwnerQuery;
+import com.iobuilders.domain.bus.query.QueryBus;
 import com.iobuilders.domain.dto.Wallet;
 import com.iobuilders.domain.dto.WalletOverview;
+import com.iobuilders.domain.dto.WalletOwnerUsername;
 import com.iobuilders.domain.dto.WalletTransaction;
+import com.iobuilders.domain.exceptions.InvalidCredentialsException;
 import com.iobuilders.domain.exceptions.NegativeBalanceExceptionException;
 import com.iobuilders.domain.exceptions.WalletNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -19,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -28,6 +33,7 @@ import static org.mockito.Mockito.*;
 final class WalletServiceTest {
 
     private static final String WALLET_ID = "26929514-237c-11ed-861d-0242ac120002";
+    private static final String ALIEN_USERNAME = "rubenboada22222";
     private static final double NEW_WALLET_QUANTITY = 120l;
     @Mock
     private WalletRepository walletRepositoryMock;
@@ -36,6 +42,9 @@ final class WalletServiceTest {
     private WalletTransactionRepository walletTransactionRepository;
     @Mock
     private EventBus eventBus;
+
+    @Mock
+    private QueryBus queryBus;
 
     @InjectMocks
     private WalletServiceImpl sut;
@@ -79,33 +88,47 @@ final class WalletServiceTest {
     }
 
     @Test
-    void should_throwException_when_transferFromUnexistingWallet() {
+    void should_throwException_when_transferFromUnexistingWallet() throws ExecutionException, InterruptedException {
         //Given
         WalletTransaction walletTransaction = WalletTransactionObjectMother.transference();
         doReturn(Optional.empty()).when(walletRepositoryMock).findByWalletId(walletTransaction.getOriginWalletId());
+        doReturn(new WalletOwnerUsername(walletTransaction.getCreatedBy())).when(queryBus).get(any(FindWalletOwnerQuery.class));
 
         //When/Then
         assertThrows(WalletNotFoundException.class, () -> sut.transfer(walletTransaction));
     }
 
     @Test
-    void should_throwException_when_transferFromWalletWithoutEnoughBalance() {
+    void should_throwException_when_transferFromWalletWithoutEnoughBalance() throws ExecutionException, InterruptedException {
         //Given
         WalletTransaction walletTransaction = WalletTransactionObjectMother.transferenceWithQuantity(NEW_WALLET_QUANTITY + 1);
         Wallet originWallet = WalletObjectMother.withQuantity(NEW_WALLET_QUANTITY);
         doReturn(Optional.of(originWallet)).when(walletRepositoryMock).findByWalletId(walletTransaction.getOriginWalletId());
+        doReturn(new WalletOwnerUsername(walletTransaction.getCreatedBy())).when(queryBus).get(any(FindWalletOwnerQuery.class));
 
         //When/Then
         assertThrows(NegativeBalanceExceptionException.class, () -> sut.transfer(walletTransaction));
     }
 
     @Test
-    void should_throwException_when_transferToUnexistingWallet() {
+    void should_throwException_when_transferFromAlienWallet() throws ExecutionException, InterruptedException {
+        //Given
+        WalletTransaction walletTransaction = WalletTransactionObjectMother.transferenceWithQuantity(NEW_WALLET_QUANTITY);
+        doReturn(new WalletOwnerUsername(ALIEN_USERNAME)).when(queryBus).get(any(FindWalletOwnerQuery.class));
+
+
+        //When/Then
+        assertThrows(InvalidCredentialsException.class, () -> sut.transfer(walletTransaction));
+    }
+
+    @Test
+    void should_throwException_when_transferToUnexistingWallet() throws ExecutionException, InterruptedException {
         //Given
         WalletTransaction walletTransaction = WalletTransactionObjectMother.transferenceWithQuantity(NEW_WALLET_QUANTITY);
         Wallet originWallet = WalletObjectMother.withQuantity(NEW_WALLET_QUANTITY);
         doReturn(Optional.of(originWallet)).when(walletRepositoryMock).findByWalletId(walletTransaction.getOriginWalletId());
         doReturn(Optional.empty()).when(walletRepositoryMock).findByWalletId(walletTransaction.getDestinyWalletId());
+        doReturn(new WalletOwnerUsername(walletTransaction.getCreatedBy())).when(queryBus).get(any(FindWalletOwnerQuery.class));
 
 
         //When/Then
@@ -113,14 +136,14 @@ final class WalletServiceTest {
     }
 
     @Test
-    void should_succeed_when_transferHaveNoExceptions() {
+    void should_succeed_when_transferHaveNoExceptions() throws ExecutionException, InterruptedException {
         //Given
         WalletTransaction walletTransaction = WalletTransactionObjectMother.transferenceWithQuantity(NEW_WALLET_QUANTITY);
         Wallet originWallet = WalletObjectMother.withQuantity(NEW_WALLET_QUANTITY);
         Wallet destinyWallet = WalletObjectMother.withQuantity(NEW_WALLET_QUANTITY);
         doReturn(Optional.of(originWallet)).when(walletRepositoryMock).findByWalletId(walletTransaction.getOriginWalletId());
         doReturn(Optional.of(destinyWallet)).when(walletRepositoryMock).findByWalletId(walletTransaction.getDestinyWalletId());
-
+        doReturn(new WalletOwnerUsername(walletTransaction.getCreatedBy())).when(queryBus).get(any(FindWalletOwnerQuery.class));
 
         //When
         sut.transfer(walletTransaction);

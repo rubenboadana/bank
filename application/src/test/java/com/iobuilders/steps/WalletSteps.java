@@ -1,10 +1,7 @@
 package com.iobuilders.steps;
 
 import com.iobuilders.ScenarioContext;
-import com.iobuilders.domain.dto.Quantity;
-import com.iobuilders.domain.dto.Wallet;
-import com.iobuilders.domain.dto.WalletOwner;
-import com.iobuilders.domain.dto.WalletTransaction;
+import com.iobuilders.domain.dto.*;
 import com.iobuilders.http.HttpClient;
 import com.iobuilders.http.HttpMethod;
 import com.iobuilders.http.HttpRequest;
@@ -29,16 +26,15 @@ public class WalletSteps {
     @Autowired
     private ScenarioContext context;
 
-    @Given("^a valid wallet is available$")
-    public void walletIsAlreadyCreated() {
-        ResponseEntity<String> response = doCreateRequest(DEFAULT_WALLET_ID, DEFAULT_WALLET_OWNER_ID);
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    private static void timeToSyncWalletAndUser() throws InterruptedException {
+        Thread.sleep(5000);
     }
 
-    @Given("^an external valid wallet is available$")
-    public void externalWalletIsAlreadyCreated() {
-        ResponseEntity<String> response = doCreateRequest(DEFAULT_EXTERNAL_WALLET_ID, DEFAULT_EXTERNAL_WALLET_OWNER_ID);
+    @Given("^a valid wallet is available$")
+    public void walletIsAlreadyCreated() throws InterruptedException {
+        ResponseEntity<String> response = doCreateRequest(DEFAULT_WALLET_ID, DEFAULT_WALLET_OWNER_ID);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        timeToSyncWalletAndUser();
     }
 
     @When("^valid wallet creation request is sent$")
@@ -89,11 +85,17 @@ public class WalletSteps {
         return httpClient.doAuthenticatedRequest(httpRequest, context.getToken());
     }
 
+    @Given("^a second valid wallet is available$")
+    public void externalWalletIsAlreadyCreated() throws InterruptedException {
+        ResponseEntity<String> response = doCreateRequest(DEFAULT_EXTERNAL_WALLET_ID, DEFAULT_EXTERNAL_WALLET_OWNER_ID);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        timeToSyncWalletAndUser();
+    }
+
     private ResponseEntity<String> doTransferenceRequest() {
-        WalletTransaction walletTransaction = WalletTransaction.builder().destinyWalletId(DEFAULT_EXTERNAL_WALLET_ID).quantity(DEFAULT_WALLET_QUANTITY).build();
+        WalletTransaction walletTransaction = WalletTransaction.builder().createdBy(RegisterRequestObjectMother.DEFAULT_USERNAME).originWalletId(DEFAULT_WALLET_ID).destinyWalletId(DEFAULT_EXTERNAL_WALLET_ID).quantity(DEFAULT_WALLET_QUANTITY).build();
 
         final HttpRequest<WalletTransaction> httpRequest = HttpClient.createHttpRequest(HttpMethod.POST, "/wallets/" + DEFAULT_WALLET_ID + "/transactions", walletTransaction);
         return httpClient.doAuthenticatedRequest(httpRequest, context.getToken());
     }
-
 }
