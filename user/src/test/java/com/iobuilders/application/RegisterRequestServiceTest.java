@@ -1,8 +1,8 @@
 package com.iobuilders.application;
 
 import com.iobuilders.domain.UserRepository;
-import com.iobuilders.domain.dto.User;
-import com.iobuilders.domain.dto.UserObjectMother;
+import com.iobuilders.domain.dto.RegisterRequest;
+import com.iobuilders.domain.dto.RegisterRequestObjectMother;
 import com.iobuilders.domain.exceptions.UserAlreadyExistsException;
 import com.iobuilders.domain.exceptions.UserNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-final class UserServiceTest {
+final class RegisterRequestServiceTest {
 
     public static final String DEFAULT_WALLET_ID = "26929514-237c-11ed-861d-0242ac120001";
     public static final String USERNAME = "rubenboada";
@@ -30,36 +30,36 @@ final class UserServiceTest {
     @Test
     void should_returnUserId_when_createSucceed() {
         //Given
-        User user = UserObjectMother.basic();
+        RegisterRequest registerRequest = RegisterRequestObjectMother.basic();
 
         //When
-        sut.create(user);
+        sut.create(registerRequest);
 
         //Then
-        verify(userRepositoryMock, times(1)).create(user);
+        verify(userRepositoryMock, times(1)).create(registerRequest);
     }
 
     @Test
     void should_throwException_when_UserAlreadyExists() {
         //Given
-        User user = UserObjectMother.basic();
-        doReturn(Optional.of(user)).when(userRepositoryMock).findByUserName(user.userName());
+        RegisterRequest registerRequest = RegisterRequestObjectMother.basic();
+        doReturn(Optional.of(registerRequest)).when(userRepositoryMock).findByUserName(registerRequest.userName());
 
         //When/Then
-        assertThrows(UserAlreadyExistsException.class, () -> sut.create(user));
+        assertThrows(UserAlreadyExistsException.class, () -> sut.create(registerRequest));
     }
 
     @Test
     void should_bindWallet_when_UserAlreadyExists() {
         //Given
-        User user = UserObjectMother.basic();
-        doReturn(Optional.of(user)).when(userRepositoryMock).findByUserName(user.userName());
+        RegisterRequest registerRequest = RegisterRequestObjectMother.basic();
+        doReturn(Optional.of(registerRequest)).when(userRepositoryMock).findByUserName(registerRequest.userName());
 
         //When
-        sut.bindWallet(user.userName(), DEFAULT_WALLET_ID);
+        sut.bindWallet(registerRequest.userName(), DEFAULT_WALLET_ID);
 
         //Then
-        verify(userRepositoryMock, times(1)).bindWallet(user, DEFAULT_WALLET_ID);
+        verify(userRepositoryMock, times(1)).bindWallet(registerRequest, DEFAULT_WALLET_ID);
     }
 
     @Test

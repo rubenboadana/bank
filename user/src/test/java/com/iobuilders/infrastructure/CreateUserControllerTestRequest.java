@@ -3,8 +3,8 @@ package com.iobuilders.infrastructure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iobuilders.domain.bus.command.CommandBus;
 import com.iobuilders.domain.command.CreateUserCommand;
-import com.iobuilders.domain.dto.User;
-import com.iobuilders.domain.dto.UserObjectMother;
+import com.iobuilders.domain.dto.RegisterRequest;
+import com.iobuilders.domain.dto.RegisterRequestObjectMother;
 import com.iobuilders.infrastructure.controller.CreateUserController;
 import org.axonframework.commandhandling.CommandExecutionException;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = CreateUserController.class)
 @AutoConfigureMockMvc(addFilters = false)
-class CreateUserControllerTest {
+class CreateUserControllerTestRequest {
 
     @MockBean
     private CommandBus commandBusMock;
@@ -43,10 +43,10 @@ class CreateUserControllerTest {
     void should_responseBadRequestError_when_CommandHandlerFailureIsProduced() throws Exception {
         //Given
         doThrow(new CommandExecutionException("Command handler thrown an exception", new RuntimeException())).when(commandBusMock).send(any(CreateUserCommand.class));
-        User user = UserObjectMother.basic();
+        RegisterRequest registerRequest = RegisterRequestObjectMother.basic();
 
         //When/Then
-        mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(user)))
+        mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
@@ -56,10 +56,10 @@ class CreateUserControllerTest {
         //Given
         CompletableFuture completedFuture = CompletableFuture.completedFuture(null);
         doReturn(completedFuture).when(commandBusMock).send(any(CreateUserCommand.class));
-        User user = UserObjectMother.basic();
+        RegisterRequest registerRequest = RegisterRequestObjectMother.basic();
 
         //When/Then
-        MvcResult mvcResult = this.mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(user)))
+        MvcResult mvcResult = this.mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(request().asyncStarted())
                 .andReturn();
 

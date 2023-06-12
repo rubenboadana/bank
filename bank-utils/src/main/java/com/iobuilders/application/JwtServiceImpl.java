@@ -2,7 +2,7 @@ package com.iobuilders.application;
 
 import com.iobuilders.domain.JwtService;
 import com.iobuilders.domain.dto.JwtToken;
-import com.iobuilders.domain.dto.User;
+import com.iobuilders.domain.dto.RegisterRequest;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -20,14 +20,15 @@ import java.util.Date;
 @Service
 public class JwtServiceImpl implements JwtService {
     public static final long JWT_MAX_DURATION_IN_MINUTES = 60l;
+
     @Value("${jwt.secret}")
     private String secret;
 
     @Override
-    public JwtToken generateToken(User user) {
+    public JwtToken generateToken(RegisterRequest registerRequest) {
         Instant now = Instant.now();
-        String jwtToken = Jwts.builder().claim("username", user.userName())
-                .setSubject(user.userName())
+        String jwtToken = Jwts.builder().claim("username", registerRequest.userName())
+                .setSubject(registerRequest.userName())
                 .setIssuedAt(new Date())
                 .setExpiration(Date.from(now.plus(JWT_MAX_DURATION_IN_MINUTES, ChronoUnit.MINUTES)))
                 .signWith(SignatureAlgorithm.HS256, key())

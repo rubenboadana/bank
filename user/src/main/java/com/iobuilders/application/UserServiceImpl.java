@@ -5,7 +5,7 @@ import com.iobuilders.domain.UserRepository;
 import com.iobuilders.domain.UserService;
 import com.iobuilders.domain.dto.JwtToken;
 import com.iobuilders.domain.dto.LoginRequest;
-import com.iobuilders.domain.dto.User;
+import com.iobuilders.domain.dto.RegisterRequest;
 import com.iobuilders.domain.exceptions.InvalidCredentialsException;
 import com.iobuilders.domain.exceptions.UserAlreadyExistsException;
 import com.iobuilders.domain.exceptions.UserNotFoundException;
@@ -32,42 +32,42 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void create(User user) {
-        log.info("UserServiceImpl:create: Starting to create the new user " + user);
-        checkUserNotAlreadyExist(user);
+    public void create(RegisterRequest registerRequest) {
+        log.info("UserServiceImpl:create: Starting to create the new user " + registerRequest);
+        checkUserNotAlreadyExist(registerRequest);
 
-        repository.create(user);
-        log.info("UserServiceImpl:create: User [" + user.userName() + "] successfully created");
+        repository.create(registerRequest);
+        log.info("UserServiceImpl:create: User [" + registerRequest.userName() + "] successfully created");
 
     }
 
-    private void checkUserNotAlreadyExist(User user) {
-        repository.findByUserName(user.userName()).ifPresent(userFound -> {
-            log.error("UserServiceImpl:create: Username already exists: " + user.userName());
+    private void checkUserNotAlreadyExist(RegisterRequest registerRequest) {
+        repository.findByUserName(registerRequest.userName()).ifPresent(userFound -> {
+            log.error("UserServiceImpl:create: Username already exists: " + registerRequest.userName());
             throw new UserAlreadyExistsException(userFound.userName());
         });
     }
 
     @Override
     public JwtToken login(LoginRequest loginRequest) {
-        User user = repository.findByUserName(loginRequest.username())
+        RegisterRequest registerRequest = repository.findByUserName(loginRequest.username())
                 .orElseThrow(() -> {
                     log.error("UserServiceImpl:login: User not found: " + loginRequest.username());
                     return new UserNotFoundException(loginRequest.username());
                 });
 
-        if (!passwordEncoder.matches(loginRequest.password(), user.password())) {
-            log.error("UserServiceImpl:login: Credentials are invalid for the user: " + user.userName());
+        if (!passwordEncoder.matches(loginRequest.password(), registerRequest.password())) {
+            log.error("UserServiceImpl:login: Credentials are invalid for the user: " + registerRequest.userName());
             throw new InvalidCredentialsException(loginRequest.username());
         }
 
-        return jwtService.generateToken(user);
+        return jwtService.generateToken(registerRequest);
     }
 
     @Override
     public void bindWallet(String userName, String walletId) {
-        User user = repository.findByUserName(userName).orElseThrow(() -> new UserNotFoundException(userName));
-        repository.bindWallet(user, walletId);
+        RegisterRequest registerRequest = repository.findByUserName(userName).orElseThrow(() -> new UserNotFoundException(userName));
+        repository.bindWallet(registerRequest, walletId);
     }
 
 

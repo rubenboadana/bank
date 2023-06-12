@@ -2,11 +2,11 @@ package com.iobuilders.domain;
 
 import com.iobuilders.domain.dto.JwtToken;
 import com.iobuilders.domain.dto.LoginRequest;
-import com.iobuilders.domain.dto.User;
+import com.iobuilders.domain.dto.RegisterRequest;
 
 public interface UserService {
 
-    void create(User user);
+    void create(RegisterRequest registerRequest);
 
     JwtToken login(LoginRequest loginRequest);
 

@@ -1,17 +1,17 @@
 package com.iobuilders.domain;
 
-import com.iobuilders.domain.dto.User;
+import com.iobuilders.domain.dto.RegisterRequest;
 import com.iobuilders.domain.dto.UserID;
 
 import java.util.Optional;
 
 public interface UserRepository {
 
-    UserID create(User user);
+    UserID create(RegisterRequest registerRequest);
 
-    Optional<User> findByUserNameAndPassword(String userName, String password);
+    Optional<RegisterRequest> findByUserNameAndPassword(String userName, String password);
 
-    Optional<User> findByUserName(String userName);
+    Optional<RegisterRequest> findByUserName(String userName);
 
-    void bindWallet(User user, String walletId);
+    void bindWallet(RegisterRequest registerRequest, String walletId);
 }

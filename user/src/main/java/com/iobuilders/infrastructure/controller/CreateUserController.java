@@ -2,7 +2,7 @@ package com.iobuilders.infrastructure.controller;
 
 import com.iobuilders.domain.bus.command.CommandBus;
 import com.iobuilders.domain.command.CreateUserCommand;
-import com.iobuilders.domain.dto.User;
+import com.iobuilders.domain.dto.RegisterRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -39,10 +39,10 @@ public class CreateUserController {
             @ApiResponse(responseCode = "500", description = "User creation failure",
                     content = @Content)})
     @PostMapping(value = "/users/register")
-    public CompletableFuture<ResponseEntity<Void>> createUser(@Valid @RequestBody User user) throws InterruptedException {
+    public CompletableFuture<ResponseEntity<Void>> createUser(@Valid @RequestBody RegisterRequest registerRequest) throws InterruptedException {
         log.info("CreateUserController:createUser: POST /users/register received");
 
-        return commandBus.send(new CreateUserCommand(user.id(), user.userName(), user.password(), user.name(), user.surname()))
+        return commandBus.send(new CreateUserCommand(registerRequest.id(), registerRequest.userName(), registerRequest.password(), registerRequest.name(), registerRequest.surname()))
                 .thenApply(response -> {
                     log.info("CreateUserController:createUser: POST /users/register dispatched");
                     return ResponseEntity.status(HttpStatus.CREATED).build();

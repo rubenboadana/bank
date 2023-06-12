@@ -1,7 +1,7 @@
 package com.iobuilders.application;
 
 import com.iobuilders.domain.UserRepository;
-import com.iobuilders.domain.dto.User;
+import com.iobuilders.domain.dto.RegisterRequest;
 import com.iobuilders.domain.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,10 +20,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        User user = repository.findByUserName(username)
+        RegisterRequest registerRequest = repository.findByUserName(username)
                 .orElseThrow(() -> new UserNotFoundException(username));
 
-        return UserDetailsImpl.build(user);
+        return UserDetailsImpl.build(registerRequest);
     }
 
 }
