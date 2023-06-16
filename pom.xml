@@ -15,7 +15,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>bank-utils</module>
+        <module>common</module>
         <module>user</module>
         <module>wallet</module>
         <module>application</module>
