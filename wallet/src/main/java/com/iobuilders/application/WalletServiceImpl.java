@@ -16,6 +16,7 @@ import com.iobuilders.domain.exceptions.NegativeBalanceExceptionException;
 import com.iobuilders.domain.exceptions.WalletNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -74,7 +75,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public synchronized void transfer(WalletTransaction transaction) throws ExecutionException, InterruptedException {
         log.info("WalletServiceImpl:transfer: Starting to do the transfer " + transaction);
-        checkOriginWalletOwner(transaction);
+        checkOriginWalletOwner(transaction.getCreatedBy(), transaction.getOriginWalletId());
         Wallet originWallet = getIfWalletExist(transaction.getOriginWalletId());
         checkEnoughBalance(transaction, originWallet);
         checkWalletExist(transaction.getDestinyWalletId());
@@ -84,19 +85,20 @@ public class WalletServiceImpl implements WalletService {
         log.info("WalletServiceImpl:transfer: Transfer [" + transaction + "] successfully created");
     }
 
-    private void checkOriginWalletOwner(WalletTransaction transaction) throws ExecutionException, InterruptedException {
-        WalletOwnerUsername username = (WalletOwnerUsername) this.queryBus.get(new FindWalletOwnerQuery(transaction.getOriginWalletId()));
+    private void checkOriginWalletOwner(String createdBy, String originWalletId) throws ExecutionException, InterruptedException {
+        WalletOwnerUsername username = (WalletOwnerUsername) this.queryBus.get(new FindWalletOwnerQuery(originWalletId));
 
-        if (!username.getValue().equals(transaction.getCreatedBy())) {
-            throw new InvalidCredentialsException(transaction.getCreatedBy());
+        if (!username.getValue().equals(createdBy)) {
+            throw new InvalidCredentialsException(createdBy);
         }
 
     }
 
     @Override
-    public WalletOverview findTransactionsByWalletId(String walletId) {
+    public WalletOverview findTransactionsByWalletId(String requestedBy, String walletId, Pageable pageable) throws ExecutionException, InterruptedException {
+        checkOriginWalletOwner(requestedBy, walletId);
         Wallet wallet = getIfWalletExist(walletId);
-        List<WalletTransaction> transactions = transactionsRepository.findTransactionsByWalletId(walletId);
+        List<WalletTransaction> transactions = transactionsRepository.findTransactionsByWalletId(walletId, pageable);
 
         return WalletOverview.builder()
                 .quantity(wallet.getQuantity())

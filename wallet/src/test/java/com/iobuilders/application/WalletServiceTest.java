@@ -20,6 +20,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +37,9 @@ final class WalletServiceTest {
     private static final String WALLET_ID = "26929514-237c-11ed-861d-0242ac120002";
     private static final String ALIEN_USERNAME = "rubenboada22222";
     private static final double NEW_WALLET_QUANTITY = 120l;
+    public static final String USERNAME = "rubenboada";
+    public static final int PAGE = 0;
+    public static final int NUM_OF_ELEMENTS = 10;
     @Mock
     private WalletRepository walletRepositoryMock;
 
@@ -155,27 +160,32 @@ final class WalletServiceTest {
 
 
     @Test
-    void should_throwException_when_getTransfersFromUnexistingWallet() {
+    void should_throwException_when_getTransfersFromUnexistingWallet() throws ExecutionException, InterruptedException {
         //Given
+        Pageable pageable = PageRequest.of(0, 10);
         doReturn(Optional.empty()).when(walletRepositoryMock).findByWalletId(WALLET_ID);
+        doReturn(new WalletOwnerUsername(USERNAME)).when(queryBus).get(any(FindWalletOwnerQuery.class));
+
 
         //When/Then
-        assertThrows(WalletNotFoundException.class, () -> sut.findTransactionsByWalletId(WALLET_ID));
+        assertThrows(WalletNotFoundException.class, () -> sut.findTransactionsByWalletId(USERNAME, WALLET_ID, pageable));
     }
 
     @Test
-    void should_succeed_when_getTransfersFromExistingWallet() {
+    void should_succeed_when_getTransfersFromExistingWallet() throws ExecutionException, InterruptedException {
         //Given
         Wallet originWallet = WalletObjectMother.basic();
         WalletTransaction deposit = WalletTransactionObjectMother.deposit();
         WalletTransaction transference = WalletTransactionObjectMother.transference();
         List<WalletTransaction> expectedTransactions = List.of(deposit, transference);
+        Pageable pageable = PageRequest.of(PAGE, NUM_OF_ELEMENTS);
 
         doReturn(Optional.of(originWallet)).when(walletRepositoryMock).findByWalletId(WALLET_ID);
-        doReturn(expectedTransactions).when(walletTransactionRepository).findTransactionsByWalletId(WALLET_ID);
+        doReturn(expectedTransactions).when(walletTransactionRepository).findTransactionsByWalletId(WALLET_ID, pageable);
+        doReturn(new WalletOwnerUsername(originWallet.getOwnerUsername())).when(queryBus).get(any(FindWalletOwnerQuery.class));
 
         //When
-        WalletOverview walletOverview = sut.findTransactionsByWalletId(WALLET_ID);
+        WalletOverview walletOverview = sut.findTransactionsByWalletId(originWallet.getOwnerUsername(), WALLET_ID, pageable);
 
         //Then
         assertEquals(originWallet.getQuantity() + deposit.getQuantity() - transference.getQuantity(), walletOverview.getQuantity());

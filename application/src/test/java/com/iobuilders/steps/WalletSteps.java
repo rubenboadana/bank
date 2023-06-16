@@ -55,14 +55,14 @@ public class WalletSteps {
         context.setResponse(response);
     }
 
-    @When("^user requests wallet transactions$")
-    public void listTransactions() {
-        ResponseEntity<String> response = doGetRequest();
+    @When("^user requests wallet transactions with pagination \"([^\"]*)\"$")
+    public void listTransactions(String pagination) {
+        ResponseEntity<String> response = doGetRequest(pagination);
         context.setResponse(response);
     }
 
-    private ResponseEntity<String> doGetRequest() {
-        final HttpRequest<String> httpRequest = HttpClient.createHttpRequest(HttpMethod.GET, "/wallets/" + DEFAULT_WALLET_ID + "/transactions", "");
+    private ResponseEntity<String> doGetRequest(String pagination) {
+        final HttpRequest<String> httpRequest = HttpClient.createHttpRequest(HttpMethod.GET, "/wallets/" + DEFAULT_WALLET_ID + "/transactions?" + pagination, "");
         return httpClient.doAuthenticatedRequest(httpRequest, context.getToken());
     }
 

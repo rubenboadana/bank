@@ -7,5 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Getter
 public class FindWalletTransactionsQuery implements Query {
+    private final String requestedBy;
     private final String walletId;
+    private final int page;
+    private final int size;
 }

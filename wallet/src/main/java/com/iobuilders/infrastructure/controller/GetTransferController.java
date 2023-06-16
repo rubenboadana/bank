@@ -13,8 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.concurrent.ExecutionException;
@@ -43,9 +46,12 @@ public class GetTransferController {
             @ApiResponse(responseCode = "500", description = "Internal error",
                     content = @Content)})
     @GetMapping(value = "/wallets/{id}/transactions")
-    public ResponseEntity<WalletOverview> getTransactions(@PathVariable(value = "id") String walletId) throws InterruptedException, ExecutionException {
+    public ResponseEntity<WalletOverview> getTransactions(@PathVariable(value = "id") String walletId, @RequestParam("page") int page, @RequestParam("size") int size) throws InterruptedException, ExecutionException {
         log.info("GetTransferController:getTransactions: GET /wallets/" + walletId + "/transactions received");
-        WalletOverview overview = (WalletOverview) queryBus.get(new FindWalletTransactionsQuery(walletId));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUserName = authentication.getName();
+
+        WalletOverview overview = (WalletOverview) queryBus.get(new FindWalletTransactionsQuery(currentUserName, walletId, page, size));
         log.info("GetTransferController:getTransactions: GET /wallets/" + walletId + "/transactions dispatched");
 
         return ResponseEntity.status(HttpStatus.OK).body(overview);

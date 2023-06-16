@@ -33,6 +33,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class GetTransferControllerTest {
     public static final String WALLET_ID = "b389d364-07ed-11ee-be56-0242ac120003";
     private static final String USERNAME = "rubenboada";
+    public static final int PAGE = 0;
+    public static final int NUM_OF_ELEMENTS = 6;
     @MockBean
     private QueryBus queryBusMock;
 
@@ -52,12 +54,12 @@ class GetTransferControllerTest {
 
         //When/Then
         Wallet wallet = WalletObjectMother.basic();
-        mockMvc.perform(get("/wallets/" + WALLET_ID + "/transactions"))
+        mockMvc.perform(get("/wallets/" + WALLET_ID + "/transactions?page=" + PAGE + "&size=" + NUM_OF_ELEMENTS))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    void should_returnHTTP200_when_orderCreationSucceed() throws Exception {
+    void should_returnHTTP200_when_getTransfersSucceed() throws Exception {
         //Given
         WalletOverview walletOverview = WalletOverviewObjectMother.basic();
         doReturn(walletOverview).when(queryBusMock).get(any(FindWalletTransactionsQuery.class));
@@ -66,7 +68,7 @@ class GetTransferControllerTest {
         SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken(USERNAME, null));
 
         //When/Then
-        this.mockMvc.perform(get("/wallets/" + WALLET_ID + "/transactions"))
+        this.mockMvc.perform(get("/wallets/" + WALLET_ID + "/transactions?page=" + PAGE + "&size=" + NUM_OF_ELEMENTS))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.quantity", is(walletOverview.getQuantity())));

@@ -3,6 +3,7 @@ package com.iobuilders.infrastructure.persistence;
 import com.iobuilders.domain.WalletTransactionRepository;
 import com.iobuilders.domain.dto.WalletTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
@@ -26,8 +27,8 @@ public class WalletTransactionRepositoryImpl implements WalletTransactionReposit
     }
 
     @Override
-    public List<WalletTransaction> findTransactionsByWalletId(String walletId) {
-        return walletTransactionJPARepository.findByOriginWalletIdOrDestinyWalletIdOrderByCreatedAtDesc(walletId, walletId)
+    public List<WalletTransaction> findTransactionsByWalletId(String walletId, Pageable pageable) {
+        return walletTransactionJPARepository.findByOriginWalletIdOrDestinyWalletIdOrderByCreatedAtDesc(walletId, walletId, pageable)
                 .stream().map(this::getDTOFrom).collect(Collectors.toList());
     }
 
