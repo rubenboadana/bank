@@ -56,9 +56,10 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public synchronized void deposit(WalletTransaction transaction) {
+    public synchronized void deposit(WalletTransaction transaction) throws ExecutionException, InterruptedException {
         log.info("WalletServiceImpl:deposit: Starting to do the deposit " + transaction);
         checkWalletExist(transaction.getDestinyWalletId());
+        checkWalletOwner(transaction.getCreatedBy(), transaction.getDestinyWalletId());
         repository.deposit(transaction);
         transactionsRepository.add(transaction);
         log.info("WalletServiceImpl:deposit: Deposit [" + transaction + "] successfully created");
@@ -75,7 +76,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public synchronized void transfer(WalletTransaction transaction) throws ExecutionException, InterruptedException {
         log.info("WalletServiceImpl:transfer: Starting to do the transfer " + transaction);
-        checkOriginWalletOwner(transaction.getCreatedBy(), transaction.getOriginWalletId());
+        checkWalletOwner(transaction.getCreatedBy(), transaction.getOriginWalletId());
         Wallet originWallet = getIfWalletExist(transaction.getOriginWalletId());
         checkEnoughBalance(transaction, originWallet);
         checkWalletExist(transaction.getDestinyWalletId());
@@ -85,10 +86,11 @@ public class WalletServiceImpl implements WalletService {
         log.info("WalletServiceImpl:transfer: Transfer [" + transaction + "] successfully created");
     }
 
-    private void checkOriginWalletOwner(String createdBy, String originWalletId) throws ExecutionException, InterruptedException {
-        WalletOwnerUsername username = (WalletOwnerUsername) this.queryBus.get(new FindWalletOwnerQuery(originWalletId));
+    private void checkWalletOwner(String createdBy, String walletId) throws ExecutionException, InterruptedException {
+        WalletOwnerUsername username = (WalletOwnerUsername) this.queryBus.get(new FindWalletOwnerQuery(walletId));
 
         if (!username.getValue().equals(createdBy)) {
+            log.info("WalletServiceImpl:checkOriginWalletOwner: The wallet [" + walletId + "] is not owned by the user [" + createdBy + "]");
             throw new InvalidCredentialsException(createdBy);
         }
 
@@ -96,7 +98,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public WalletOverview findTransactionsByWalletId(String requestedBy, String walletId, Pageable pageable) throws ExecutionException, InterruptedException {
-        checkOriginWalletOwner(requestedBy, walletId);
+        checkWalletOwner(requestedBy, walletId);
         Wallet wallet = getIfWalletExist(walletId);
         List<WalletTransaction> transactions = transactionsRepository.findTransactionsByWalletId(walletId, pageable);
 

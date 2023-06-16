@@ -69,7 +69,7 @@ final class WalletServiceTest {
     }
 
     @Test
-    void should_throwException_when_depositToUnexistingWallet() {
+    void should_throwException_when_depositToUnexistingWallet() throws ExecutionException, InterruptedException {
         //Given
         WalletTransaction walletTransaction = WalletTransactionObjectMother.deposit();
         doReturn(Optional.empty()).when(walletRepositoryMock).findByWalletId(walletTransaction.getDestinyWalletId());
@@ -79,10 +79,22 @@ final class WalletServiceTest {
     }
 
     @Test
-    void should_returnUpdatedWallet_when_updateSucceed() {
+    void should_throwException_when_depositToExternalWallet() throws ExecutionException, InterruptedException {
+        //Given
+        WalletTransaction walletTransaction = WalletTransactionObjectMother.deposit();
+        doReturn(Optional.of(WalletObjectMother.basic())).when(walletRepositoryMock).findByWalletId(walletTransaction.getDestinyWalletId());
+        doReturn(new WalletOwnerUsername(ALIEN_USERNAME)).when(queryBus).get(any(FindWalletOwnerQuery.class));
+
+        //When/Then
+        assertThrows(InvalidCredentialsException.class, () -> sut.deposit(walletTransaction));
+    }
+
+    @Test
+    void should_returnUpdatedWallet_when_updateSucceed() throws ExecutionException, InterruptedException {
         //Given
         WalletTransaction transaction = WalletTransactionObjectMother.deposit();
         doReturn(Optional.of(WalletObjectMother.basic())).when(walletRepositoryMock).findByWalletId(transaction.getDestinyWalletId());
+        doReturn(new WalletOwnerUsername(transaction.getCreatedBy())).when(queryBus).get(any(FindWalletOwnerQuery.class));
 
         //When
         sut.deposit(transaction);

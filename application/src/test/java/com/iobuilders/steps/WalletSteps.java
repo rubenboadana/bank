@@ -27,7 +27,7 @@ public class WalletSteps {
     private ScenarioContext context;
 
     private static void timeToSyncWalletAndUser() throws InterruptedException {
-        Thread.sleep(5000);
+        Thread.sleep(12000);
     }
 
     @Given("^a valid wallet is available$")

@@ -11,7 +11,7 @@ public interface WalletService {
 
     void create(Wallet wallet) throws InterruptedException;
 
-    void deposit(WalletTransaction transaction);
+    void deposit(WalletTransaction transaction) throws ExecutionException, InterruptedException;
 
     void transfer(WalletTransaction transaction) throws ExecutionException, InterruptedException;
 
