@@ -4,13 +4,13 @@ import com.iobuilders.domain.exceptions.InvalidUserIDException;
 
 import java.util.UUID;
 
-public record UserID(String id) {
+public record UserID(String value) {
 
     public UserID {
         try {
-            UUID.fromString(id);
+            UUID.fromString(value);
         } catch (IllegalArgumentException ex) {
-            throw new InvalidUserIDException(id);
+            throw new InvalidUserIDException(value);
         }
     }
 }

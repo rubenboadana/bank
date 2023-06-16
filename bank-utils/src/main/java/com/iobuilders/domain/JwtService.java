@@ -1,10 +1,10 @@
 package com.iobuilders.domain;
 
 import com.iobuilders.domain.dto.JwtToken;
-import com.iobuilders.domain.dto.RegisterRequest;
+import com.iobuilders.domain.dto.LoginRequest;
 
 public interface JwtService {
-    JwtToken generateToken(RegisterRequest registerRequest);
+    JwtToken generateToken(LoginRequest loginRequest);
 
     boolean validate(String token);
 

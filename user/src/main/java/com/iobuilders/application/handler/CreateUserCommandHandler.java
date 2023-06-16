@@ -1,9 +1,10 @@
 package com.iobuilders.application.handler;
 
+import com.iobuilders.domain.User;
 import com.iobuilders.domain.UserService;
 import com.iobuilders.domain.bus.command.CommandHandler;
 import com.iobuilders.domain.command.CreateUserCommand;
-import com.iobuilders.domain.dto.RegisterRequest;
+import com.iobuilders.domain.dto.UserID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +27,7 @@ public class CreateUserCommandHandler implements CommandHandler<CreateUserComman
     @org.axonframework.commandhandling.CommandHandler
     public void handle(CreateUserCommand command) {
         log.info("CreateUserCommandHandler:handle: Command received");
-        RegisterRequest registerRequest = new RegisterRequest(command.getId(), command.getUserName(), passwordEncoder.encode(command.getPassword()), command.getName(), command.getSurname());
-        userservice.create(registerRequest);
+        User user = new User(new UserID(command.getId()), command.getUserName(), passwordEncoder.encode(command.getPassword()), command.getName(), command.getSurname());
+        userservice.create(user);
     }
 }

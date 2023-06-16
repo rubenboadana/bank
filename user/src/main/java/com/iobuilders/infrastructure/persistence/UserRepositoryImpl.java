@@ -1,7 +1,7 @@
 package com.iobuilders.infrastructure.persistence;
 
+import com.iobuilders.domain.User;
 import com.iobuilders.domain.UserRepository;
-import com.iobuilders.domain.dto.RegisterRequest;
 import com.iobuilders.domain.dto.UserID;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,48 +22,48 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public UserID create(RegisterRequest registerRequest) {
-        UserEntity entity = getEntityFrom(registerRequest);
+    public UserID create(User user) {
+        UserEntity entity = getEntityFrom(user);
         UserEntity response = userJPARepository.save(entity);
 
         return new UserID(response.getId());
     }
 
     @Override
-    public Optional<RegisterRequest> findByUserName(String userName) {
+    public Optional<User> findByUserName(String userName) {
         Optional<UserEntity> userEntity = userJPARepository.findByUserName(userName);
         return getDTOFrom(userEntity);
     }
 
     @Override
-    public Optional<RegisterRequest> findByWalletId(String walletId) {
+    public Optional<User> findByWalletId(String walletId) {
         Optional<UserEntity> userEntity = userJPARepository.findByWalletId(walletId);
         return getDTOFrom(userEntity);
     }
 
     @Override
-    public void bindWallet(RegisterRequest registerRequest, String walletId) {
-        UserEntity entity = getEntityFrom(registerRequest);
+    public void bindWallet(User user, String walletId) {
+        UserEntity entity = getEntityFrom(user);
         entity.setWalletId(walletId);
         userJPARepository.save(entity);
     }
 
 
-    private UserEntity getEntityFrom(RegisterRequest registerRequest) {
+    private UserEntity getEntityFrom(User user) {
         return UserEntity.builder()
-                .id(registerRequest.id())
-                .userName(registerRequest.userName())
-                .password(registerRequest.password())
-                .name(registerRequest.name())
-                .surname(registerRequest.surname())
+                .id(user.id().value())
+                .userName(user.userName())
+                .password(user.password())
+                .name(user.name())
+                .surname(user.surname())
                 .build();
     }
 
-    private Optional<RegisterRequest> getDTOFrom(UserEntity userEntity) {
-        return Optional.of(new RegisterRequest(userEntity.getId(), userEntity.getUserName(), userEntity.getPassword(), userEntity.getName(), userEntity.getSurname()));
+    private Optional<User> getDTOFrom(UserEntity userEntity) {
+        return Optional.of(new User(new UserID(userEntity.getId()), userEntity.getUserName(), userEntity.getPassword(), userEntity.getName(), userEntity.getSurname()));
     }
 
-    private Optional<RegisterRequest> getDTOFrom(Optional<UserEntity> optionalUserEntity) {
+    private Optional<User> getDTOFrom(Optional<UserEntity> optionalUserEntity) {
         if (optionalUserEntity.isEmpty()) {
             return Optional.empty();
         }

@@ -1,7 +1,7 @@
 package com.iobuilders.application;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.iobuilders.domain.dto.RegisterRequest;
+import com.iobuilders.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -22,11 +22,11 @@ public class UserDetailsImpl implements UserDetails {
         this.password = password;
     }
 
-    public static UserDetailsImpl build(RegisterRequest registerRequest) {
+    public static UserDetailsImpl build(User user) {
         return new UserDetailsImpl(
-                registerRequest.id(),
-                registerRequest.userName(),
-                registerRequest.password());
+                user.id().value(),
+                user.userName(),
+                user.password());
     }
 
     @Override
