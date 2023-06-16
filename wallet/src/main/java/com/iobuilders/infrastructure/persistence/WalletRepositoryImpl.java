@@ -17,7 +17,7 @@ public class WalletRepositoryImpl implements WalletRepository {
     private final WalletJPARepository walletJPARepository;
 
     @Autowired
-    public WalletRepositoryImpl(WalletJPARepository walletJPARepository){
+    public WalletRepositoryImpl(WalletJPARepository walletJPARepository) {
         this.walletJPARepository = walletJPARepository;
     }
 
