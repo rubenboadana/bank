@@ -1,4 +1,4 @@
-# bank
+# Java/SpringBoot3 modulith with Hexagonal architecture + CQRS + pub/sub communication
 
 [![CI pipeline status](https://github.com/rubenboadana/bank/actions/workflows/maven.yml/badge.svg)](https://github.com/rubenboadana/bank/actions)
 ![Coverage](.github/badges/jacoco.svg)
